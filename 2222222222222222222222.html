@@ -1,0 +1,2986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant Account Data Viewer</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- CSS Variable Definitions (5 Dark Themes) --- */
+
+        /* 1. Default Dark Theme (Valorant Red) */
+        :root, .theme-dark {
+            --primary-accent: #ff4655; /* Valorant Red */
+            --utility-accent: #4f46e5; /* Indigo-600 */
+            --utility-accent-hover: #4338ca; /* Indigo-700 */
+            --dark-background: #1a1a1a;
+            --card-background: #252525;
+            --text-primary: #f5f5f5;
+            --text-muted: #a0a0a0;
+            --header-bg: #111111;
+            --border-color: #333;
+            --input-bg: #4a4a4a;
+            --input-border: #4a4a4a;
+            --table-head-bg: rgba(55, 65, 81, 0.5);
+            --button-bg: #4a4a4a;
+            --button-hover-bg: #5a5a5a;
+            
+            /* REGIONAL COLORS (UPDATED) */
+            --region-eu-color: #3B82F6; /* Sky Blue */
+            --region-na-color: #EF4444; /* Bright Red */
+            --region-br-color: #22C55E; /* Emerald Green */
+            --region-ap-color: #F97316; /* Deep Orange */
+        }
+
+        /* 2. Obsidian Sentinel Theme (Dark Blue/Cyan) */
+        .theme-obsidian {
+            --primary-accent: #00e0b4; /* Cyan/Teal */
+            --utility-accent: #3b82f6; /* Blue-500 */
+            --utility-accent-hover: #2563eb; /* Blue-600 */
+            --dark-background: #0d111a; /* Deep Dark Blue */
+            --card-background: #192333; /* Dark Slate Blue */
+            --text-primary: #e6e6e6;
+            --text-muted: #8c909c;
+            --header-bg: #090c13;
+            --border-color: #313d54;
+            --input-bg: #2b3952;
+            --input-border: #313d54;
+            --table-head-bg: rgba(30, 41, 59, 0.8);
+            --button-bg: #313d54;
+            --button-hover-bg: #4a5d85;
+            
+            /* REGIONAL COLORS (UPDATED) */
+            --region-eu-color: #60A5FA; 
+            --region-na-color: #DC2626; 
+            --region-br-color: #4ADE80; 
+            --region-ap-color: #F97316; 
+        }
+        
+        /* 3. Viper's Venom Theme (Dark Green/Black) */
+        .theme-venom {
+            --primary-accent: #61ff46; /* Toxic Green */
+            --utility-accent: #9d174d; /* Rose-700 (deep pink/magenta) */
+            --utility-accent-hover: #831843; /* Rose-800 */
+            --dark-background: #0f0f0f;
+            --card-background: #1c1c1c;
+            --text-primary: #f5f5f5;
+            --text-muted: #909090;
+            --header-bg: #060606;
+            --border-color: #404040;
+            --input-bg: #3a3a3a;
+            --input-border: #4a4a4a;
+            --table-head-bg: rgba(40, 40, 40, 0.5);
+            --button-bg: #333333;
+            --button-hover-bg: #444444;
+            
+            /* REGIONAL COLORS (UPDATED) */
+            --region-eu-color: #60A5FA; 
+            --region-na-color: #F87171; 
+            --region-br-color: #4ADE80; 
+            --region-ap-color: #FBBF24; 
+        }
+        
+        /* 4. Phoenix's Fire Theme (Dark Orange/Red) - NEW */
+        .theme-fire {
+            --primary-accent: #ff914d; /* Fiery Orange */
+            --utility-accent: #334155; /* Slate-700 (dark gray) */
+            --utility-accent-hover: #1e293b; /* Slate-800 */
+            --dark-background: #17100b; 
+            --card-background: #2b1d12; 
+            --text-primary: #ffedd5;
+            --text-muted: #cc9966;
+            --header-bg: #0a0603;
+            --border-color: #4d331a;
+            --input-bg: #3f2a1b;
+            --input-border: #4d331a;
+            --table-head-bg: rgba(77, 51, 26, 0.7);
+            --button-bg: #3f2a1b;
+            --button-hover-bg: #4d331a;
+            
+            /* REGIONAL COLORS (UPDATED) */
+            --region-eu-color: #FBBF24; /* Amber */
+            --region-na-color: #F87171; /* Light Red */
+            --region-br-color: #4ADE80; /* Emerald */
+            --region-ap-color: #60A5FA; /* Blue */ 
+        }
+
+        /* 5. Omen's Shadow Theme (Dark Purple/Black) - NEW */
+        .theme-shadow {
+            --primary-accent: #a855f7; /* Violet/Purple */
+            --utility-accent: #facc15; /* Amber-400 (bright yellow) */
+            --utility-accent-hover: #eab308; /* Amber-500 */
+            --dark-background: #100a17;
+            --card-background: #1f142b;
+            --text-primary: #f3e8ff;
+            --text-muted: #9a73c9;
+            --header-bg: #08050c;
+            --border-color: #3b2a52;
+            --input-bg: #322345;
+            --input-border: #3b2a52;
+            --table-head-bg: rgba(59, 42, 82, 0.7);
+            --button-bg: #322345;
+            --button-hover-bg: #3b2a52;
+            
+            /* REGIONAL COLORS (UPDATED) */
+            --region-eu-color: #C4B5FD; /* Lavender */
+            --region-na-color: #FBCFE8; /* Pink */
+            --region-br-color: #A7F3D0; /* Mint */
+            --region-ap-color: #FDE68A; /* Light Yellow */
+        }
+
+        /* 6. Jett's Wind Theme (Light Blue/Cyan) - NEW */
+        .theme-wind {
+            --primary-accent: #00d9ff; /* Bright Cyan */
+            --utility-accent: #06b6d4; /* Cyan-500 */
+            --utility-accent-hover: #0891b2; /* Cyan-600 */
+            --dark-background: #0a1628;
+            --card-background: #152238;
+            --text-primary: #e0f2fe;
+            --text-muted: #7dd3fc;
+            --header-bg: #05101f;
+            --border-color: #1e3a5f;
+            --input-bg: #1e3a5f;
+            --input-border: #2563eb;
+            --table-head-bg: rgba(30, 58, 95, 0.8);
+            --button-bg: #1e3a5f;
+            --button-hover-bg: #2563eb;
+            
+            /* REGIONAL COLORS */
+            --region-eu-color: #60A5FA; /* Sky Blue */
+            --region-na-color: #F87171; /* Light Red */
+            --region-br-color: #4ADE80; /* Emerald */
+            --region-ap-color: #FBBF24; /* Amber */
+        }
+
+        /* 7. Sage's Healing Theme (Soft Green/Emerald) - NEW */
+        .theme-healing {
+            --primary-accent: #10b981; /* Emerald-500 */
+            --utility-accent: #059669; /* Emerald-600 */
+            --utility-accent-hover: #047857; /* Emerald-700 */
+            --dark-background: #0a1f17;
+            --card-background: #153d2e;
+            --text-primary: #d1fae5;
+            --text-muted: #6ee7b7;
+            --header-bg: #051410;
+            --border-color: #1f4d3d;
+            --input-bg: #1f4d3d;
+            --input-border: #10b981;
+            --table-head-bg: rgba(31, 77, 61, 0.8);
+            --button-bg: #1f4d3d;
+            --button-hover-bg: #059669;
+            
+            /* REGIONAL COLORS */
+            --region-eu-color: #34D399; /* Emerald-400 */
+            --region-na-color: #F87171; /* Light Red */
+            --region-br-color: #4ADE80; /* Emerald */
+            --region-ap-color: #FCD34D; /* Amber-300 */
+        }
+
+        /* 8. Reyna's Soul Theme (Deep Purple/Pink) - NEW */
+        .theme-soul {
+            --primary-accent: #ec4899; /* Pink-500 */
+            --utility-accent: #a855f7; /* Purple-500 */
+            --utility-accent-hover: #9333ea; /* Purple-600 */
+            --dark-background: #1a0d1f;
+            --card-background: #2d1b3d;
+            --text-primary: #fce7f3;
+            --text-muted: #f9a8d4;
+            --header-bg: #0f0514;
+            --border-color: #4c1d5c;
+            --input-bg: #3d2550;
+            --input-border: #7c3aed;
+            --table-head-bg: rgba(76, 29, 92, 0.8);
+            --button-bg: #3d2550;
+            --button-hover-bg: #7c3aed;
+            
+            /* REGIONAL COLORS */
+            --region-eu-color: #C084FC; /* Purple-400 */
+            --region-na-color: #F472B6; /* Pink-400 */
+            --region-br-color: #A78BFA; /* Violet-400 */
+            --region-ap-color: #FBBF24; /* Amber */
+        }
+
+        /* 9. Neon's Electric Theme (Bright Pink/Cyan) - NEW */
+        .theme-electric {
+            --primary-accent: #f0abfc; /* Fuchsia-300 */
+            --utility-accent: #06b6d4; /* Cyan-500 */
+            --utility-accent-hover: #0891b2; /* Cyan-600 */
+            --dark-background: #1a0a2e;
+            --card-background: #2d1b4e;
+            --text-primary: #faf5ff;
+            --text-muted: #c084fc;
+            --header-bg: #0f0520;
+            --border-color: #4c1d5c;
+            --input-bg: #3d2550;
+            --input-border: #a855f7;
+            --table-head-bg: rgba(76, 29, 92, 0.8);
+            --button-bg: #3d2550;
+            --button-hover-bg: #7c3aed;
+            
+            /* REGIONAL COLORS */
+            --region-eu-color: #A78BFA; /* Violet-400 */
+            --region-na-color: #F472B6; /* Pink-400 */
+            --region-br-color: #34D399; /* Emerald-400 */
+            --region-ap-color: #FCD34D; /* Amber-300 */
+        }
+
+        /* --- Base Styles --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+        /* RTL Support for Arabic */
+        [dir="rtl"] {
+            direction: rtl;
+        }
+        
+        [dir="rtl"] .ml-1, [dir="rtl"] .mr-1, [dir="rtl"] .mr-2, [dir="rtl"] .mr-4 {
+            margin-left: inherit;
+            margin-right: 0;
+        }
+        
+        [dir="rtl"] .ml-1 {
+            margin-right: 0.25rem;
+        }
+        
+        [dir="rtl"] .mr-1 {
+            margin-left: 0.25rem;
+            margin-right: 0;
+        }
+        
+        [dir="rtl"] .mr-2 {
+            margin-left: 0.5rem;
+            margin-right: 0;
+        }
+        
+        [dir="rtl"] .space-x-2 > * + *, [dir="rtl"] .space-x-4 > * + * {
+            margin-right: 0;
+            margin-left: inherit;
+        }
+        
+        [dir="rtl"] .space-x-2 > * + * {
+            margin-left: 0.5rem;
+        }
+        
+        [dir="rtl"] .space-x-4 > * + * {
+            margin-left: 1rem;
+        }
+        
+        [dir="rtl"] .flex.items-center {
+            flex-direction: row-reverse;
+        }
+        
+        [dir="rtl"] .justify-end {
+            justify-content: flex-start;
+        }
+        
+        [dir="rtl"] .text-left {
+            text-align: right;
+        }
+        
+        /* General Component Styling */
+        .header-bg {
+            background-color: var(--header-bg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .config-card, .results-card, .modal-content-bg {
+            background-color: var(--card-background);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color); 
+        }
+
+        /* Accent Colors */
+        .accent-primary { color: var(--primary-accent); }
+        .bg-accent-primary { background-color: var(--primary-accent); }
+        
+        /* Utility Button Styles (NEW - Applied to Settings Nav) */
+        .utility-btn { 
+            background-color: var(--utility-accent); 
+            color: white; 
+            transition: background-color 0.15s; 
+        }
+        .utility-btn:hover { 
+            background-color: var(--utility-accent-hover); 
+        }
+
+        /* REGIONAL TEXT COLORS */
+        .region-eu-text { color: var(--region-eu-color); }
+        .region-na-text { color: var(--region-na-color); }
+        .region-br-text { color: var(--region-br-color); }
+        .region-ap-text { color: var(--region-ap-color); }
+        
+        /* Status Badges */
+        .status-valid { background-color: #38bdf8; color: black; } /* Light Blue - constant */
+        .status-banned { background-color: var(--primary-accent); color: var(--text-primary); } 
+        
+        /* Row coloring for better visibility */
+        .results-card tbody tr.row-banned { background-color: color-mix(in srgb, var(--primary-accent) 15%, transparent); }
+        .results-card tbody tr.row-valid { background-color: color-mix(in srgb, #38bdf8 8%, transparent); }
+        .results-card tbody tr.row-banned:hover { background-color: color-mix(in srgb, var(--primary-accent) 30%, transparent); }
+        .results-card tbody tr.row-valid:hover { background-color: color-mix(in srgb, #38bdf8 20%, transparent); }
+
+        .view-btn { background-color: var(--button-bg); transition: background-color 0.15s; color: var(--text-primary); }
+        .view-btn:hover { background-color: var(--primary-accent); color: #fff; } 
+        
+        /* Standard Action Buttons (not accent primary) */
+        .action-btn { background-color: var(--button-bg); color: var(--text-primary); }
+        .action-btn:hover { background-color: var(--button-hover-bg); }
+
+        /* Admin Tab Styles */
+        .admin-tab {
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .admin-tab.active {
+            border-bottom-color: var(--primary-accent) !important;
+            color: var(--primary-accent) !important;
+        }
+        .admin-tab-content {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Input and Select Styles */
+        .filter-select, .input-style {
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        /* Table Head Styles */
+        .results-card thead {
+            background-color: var(--table-head-bg);
+        }
+        
+        /* Modal Content (Preformatted Text) */
+        #modal-content {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            white-space: pre; 
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+        }
+        
+        /* Other variable-dependent styles */
+        .border-gray-700 { border-color: var(--border-color); }
+        .text-gray-400 { color: var(--text-muted); }
+
+        /* Dashboard Skin Button Styles */
+        .skin-button {
+            background-color: var(--button-bg);
+            color: var(--text-primary);
+            transition: all 0.2s;
+            text-align: left;
+            word-break: break-word;
+        }
+        .skin-button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-1px);
+        }
+
+        /* Toggle Switch Styling */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--button-bg); transition: .4s; border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+    </style>
+</head>
+<body class="theme-dark">
+
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="modal-content-bg rounded-xl p-8 w-full max-w-md">
+            <div class="text-center mb-6">
+                <svg class="w-12 h-12 accent-primary mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.14L17.5 17h-11L12 6.14z"/></svg>
+                <h2 class="text-3xl font-bold accent-primary mb-2" data-translate="valorantChecker">VALORANT Checker</h2>
+                <p class="text-gray-400 text-sm" data-translate="professionalVerification">Professional Account Verification</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="space-y-4">
+                <h3 class="text-xl font-bold mb-4 text-center" data-translate="login">Login</h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2" data-translate="username">Username</label>
+                    <input type="text" id="login-username" class="input-style w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition" placeholder="Enter your username">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2" data-translate="password">Password</label>
+                    <input type="password" id="login-password" class="input-style w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition" placeholder="Enter your password">
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-accent-primary hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">
+                    <span data-translate="login">Login</span>
+                </button>
+                <p class="text-center text-sm text-gray-400">
+                    <span data-translate="dontHaveAccount">Don't have an account?</span>
+                    <button onclick="showRegisterForm()" class="accent-primary hover:underline ml-1 font-semibold" data-translate="register">Register</button>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="space-y-4 hidden">
+                <h3 class="text-xl font-bold mb-4 text-center" data-translate="register">Register</h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2" data-translate="username">Username</label>
+                    <input type="text" id="register-username" class="input-style w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition" placeholder="Choose a username">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2" data-translate="password">Password</label>
+                    <input type="password" id="register-password" class="input-style w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition" placeholder="Choose a password">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2" data-translate="confirmPassword">Confirm Password</label>
+                    <input type="password" id="register-confirm-password" class="input-style w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition" placeholder="Confirm your password">
+                </div>
+                <button onclick="handleRegister()" class="w-full bg-accent-primary hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">
+                    <span data-translate="register">Register</span>
+                </button>
+                <p class="text-center text-sm text-gray-400">
+                    <span data-translate="alreadyHaveAccount">Already have an account?</span>
+                    <button onclick="showLoginForm()" class="accent-primary hover:underline ml-1 font-semibold" data-translate="login">Login</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Hidden until logged in) -->
+    <div id="main-app" class="hidden">
+    <!-- Header / Navbar -->
+    <header class="header-bg p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <!-- Valorant Icon - uses accent color -->
+            <svg class="w-6 h-6 accent-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.14L17.5 17h-11L12 6.14z"/></svg>
+            <h1 class="text-xl font-bold" data-translate="valorantChecker">VALORANT Checker</h1>
+            <span class="text-sm font-light text-gray-400 hidden sm:block" data-translate="professionalVerification">Professional Account Verification</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <!-- Settings Button - CHANGED TO UTILITY BUTTON -->
+             <button id="open-settings-btn" class="text-sm font-medium transition flex items-center p-2 rounded-lg utility-btn">
+                <i data-lucide="settings" class="w-5 h-5"></i><span class="ml-1 hidden sm:inline" data-translate="settings">Settings</span>
+            </button>
+            <!-- Discord link -->
+            <a href="https://discord.gg/kWpszjFn6h" target="_blank" class="text-sm font-medium hover:accent-primary transition flex items-center">
+                <i data-lucide="message-square" class="w-5 h-5 accent-primary"></i><span class="ml-1 hidden sm:inline" data-translate="discord">Discord</span>
+            </a>
+            <!-- Current User Display with Profile Picture -->
+            <div class="flex items-center space-x-2">
+                <img id="user-profile-picture" src="" alt="Profile" class="w-8 h-8 rounded-full border-2 border-gray-600 object-cover" style="display: none;">
+                <span id="current-user-display" class="text-sm text-gray-400 font-medium"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="p-4 md:p-8">
+        <!-- Stats Row - Regional Sums -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            
+            <!-- EU Accounts Sum -->
+            <div class="config-card p-4">
+                <p class="text-lg font-bold region-eu-text" data-translate="euAccounts">EU Accounts</p>
+                <p class="text-xs text-gray-400 mb-0.5" data-translate="sum">Sum</p>
+                <!-- Color change applied here -->
+                <p id="stat-eu" class="text-3xl font-extrabold mt-1 region-eu-text">0</p>
+            </div>
+            
+            <!-- NA Accounts Sum -->
+            <div class="config-card p-4">
+                <p class="text-lg font-bold region-na-text" data-translate="naAccounts">NA Accounts</p>
+                <p class="text-xs text-gray-400 mb-0.5" data-translate="sum">Sum</p>
+                 <!-- Color change applied here -->
+                <p id="stat-na" class="text-3xl font-extrabold mt-1 region-na-text">0</p>
+            </div>
+            
+            <!-- BR Accounts Sum -->
+            <div class="config-card p-4">
+                <p class="text-lg font-bold region-br-text" data-translate="brAccounts">BR Accounts</p>
+                <p class="text-xs text-gray-400 mb-0.5" data-translate="sum">Sum</p>
+                 <!-- Color change applied here -->
+                <p id="stat-br" class="text-3xl font-extrabold mt-1 region-br-text">0</p>
+            </div>
+            
+            <!-- AP Accounts Sum -->
+            <div class="config-card p-4">
+                <p class="text-lg font-bold region-ap-text" data-translate="apAccounts">AP Accounts</p>
+                <p class="text-xs text-gray-400 mb-0.5" data-translate="sum">Sum</p>
+                 <!-- Color change applied here -->
+                <p id="stat-ap" class="text-3xl font-extrabold mt-1 region-ap-text">0</p>
+            </div>
+
+        </div>
+
+        <!-- Configuration & Results Panels -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Left Panel: Configuration (Filters) -->
+            <div class="lg:w-1/3 flex flex-col space-y-4">
+                
+                <!-- Filter Toggle Button (Visible only on mobile/tablet) -->
+                <button id="toggle-filters-btn" class="lg:hidden w-full action-btn hover:bg-gray-600 text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center space-x-2">
+                    <i data-lucide="chevron-down" id="toggle-icon" class="w-5 h-5 transition-transform duration-300 accent-primary"></i>
+                    <span id="toggle-text" data-translate="showFilters">Show Filters</span>
+                </button>
+
+                <!-- Filter Container (Content is now dynamically generated by JavaScript) -->
+                <div id="filter-container" class="grid grid-cols-2 gap-4 hidden lg:grid lg:grid-cols-1 xl:grid-cols-2"> 
+                    <!-- Filter cards are rendered here based on visibility settings -->
+                </div> 
+                
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="lg:w-2/3 results-card p-6 overflow-x-auto">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i data-lucide="folder-open" class="w-6 h-6 mr-2 accent-primary"></i> <span data-translate="resultsTable">Results Table</span>
+                </h2>
+
+                <!-- Action Buttons & File Name Display -->
+                <div class="flex justify-between items-center mb-4">
+                    <!-- File Name Display moved to show recent file activity -->
+                    <p id="file-name-display" class="text-xs text-gray-400 italic max-w-[50%] truncate"></p>
+                    
+                    <div class="flex space-x-2">
+                        <!-- Upload Button -->
+                        <button id="upload-files-btn" class="px-3 py-1 bg-accent-primary hover:bg-red-700 rounded-md text-sm transition flex items-center font-bold text-white">
+                            <i data-lucide="folder-plus" class="w-4 h-4 mr-1"></i> <span data-translate="addFiles">Add Files</span>
+                        </button>
+                        
+                        <button class="px-3 py-1 action-btn hover:bg-gray-600 rounded-md text-sm transition" onclick="clearResults()" data-translate="clear">Clear</button>
+                        <button class="px-3 py-1 action-btn hover:bg-gray-600 rounded-md text-sm transition" onclick="copyTableData()" data-translate="copy">Copy</button>
+                        <button class="px-3 py-1 action-btn hover:bg-gray-600 rounded-md text-sm transition flex items-center" onclick="downloadData()">
+                            <i data-lucide="download" class="w-4 h-4 mr-1 accent-primary"></i> <span data-translate="download">Download</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div class="min-w-full">
+                    <table class="w-full text-sm text-left text-gray-300">
+                        <thead class="text-xs uppercase" id="results-table-head">
+                            <!-- Headers dynamically rendered here -->
+                        </thead>
+                        <tbody id="results-table-body">
+                            <!-- Data will be injected here -->
+                            <tr>
+                                <td colspan="10" class="py-4 text-center text-gray-400" data-translate="uploadJsonFiles">Upload JSON file(s) to get started, or wait for automatic backup data to load.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal for Detailed View - Dashboard Style -->
+    <div id="view-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="modal-content-bg rounded-xl p-6 w-full max-w-6xl max-h-[95vh] overflow-y-auto my-4">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2" data-translate="accountDashboard">Account Dashboard</h2>
+                    <p id="dashboard-username" class="text-lg text-gray-300"></p>
+                    <div id="ban-banner" class="mt-3 hidden"></div>
+                </div>
+                <button onclick="closeViewModal()" class="text-gray-400 hover:text-primary transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Account Details Card -->
+                <div class="config-card p-5">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i data-lucide="user" class="w-5 h-5 mr-2 accent-primary"></i> <span data-translate="accountDetails">Account Details</span>
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="level">Level</p>
+                            <p id="dashboard-level" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="region">Region</p>
+                            <p id="dashboard-region" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="country">Country</p>
+                            <p id="dashboard-country" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="createdAt">Created At</p>
+                            <p id="dashboard-created" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="lastChecked">Last Checked</p>
+                            <p id="dashboard-last-checked" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Competitive Status Card -->
+                <div class="config-card p-5">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i data-lucide="trophy" class="w-5 h-5 mr-2 text-green-400"></i> <span data-translate="competitiveStatus">Competitive Status</span>
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="currentRank">Current Rank</p>
+                            <p id="dashboard-current-rank" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="peakRank">Peak Rank</p>
+                            <p id="dashboard-peak-rank" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="previousRank">Previous Rank</p>
+                            <p id="dashboard-previous-rank" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400" data-translate="lastActivity">Last Activity</p>
+                            <p id="dashboard-last-activity" class="text-lg font-semibold text-blue-400"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory & Currency Card -->
+            <div class="config-card p-5 mb-6">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i data-lucide="coins" class="w-5 h-5 mr-2 text-yellow-400"></i> <span data-translate="inventoryCurrency">Inventory & Currency</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-400" data-translate="skinCount">Skin Count</p>
+                        <p id="dashboard-skin-count" class="text-lg font-semibold text-blue-400"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400" data-translate="valorantPoints">Valorant Points</p>
+                        <p id="dashboard-vp" class="text-lg font-semibold text-blue-400"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400" data-translate="radianitePoints">Radianite Points</p>
+                        <p id="dashboard-rad" class="text-lg font-semibold text-blue-400"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400" data-translate="kingdomCredits">Kingdom Credits</p>
+                        <p id="dashboard-kc" class="text-lg font-semibold text-blue-400"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400" data-translate="freeAgents">Free Agents</p>
+                        <p id="dashboard-free-agents" class="text-lg font-semibold text-blue-400"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skin Collection Section -->
+            <div id="skin-collection-section" class="config-card p-5 hidden">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i data-lucide="sword" class="w-5 h-5 mr-2 accent-primary"></i> <span data-translate="skinCollection">Skin Collection</span> (<span id="skin-total-count">0</span> <span data-translate="total">Total</span>)
+                </h3>
+                <div id="skin-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                    <!-- Skins will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard (Hidden by default) -->
+    <div id="admin-app" class="hidden">
+        <!-- Admin Header -->
+        <header class="header-bg p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="w-6 h-6 accent-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.14L17.5 17h-11L12 6.14z"/></svg>
+                <h1 class="text-xl font-bold">VALORANT Checker - Admin Panel</h1>
+                <span class="text-sm font-light text-gray-400 hidden sm:block">Administrator Dashboard</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="handleAdminLogout()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center">
+                    <i data-lucide="log-out" class="w-5 h-5 mr-2"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Admin Content -->
+        <main class="p-4 md:p-8">
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="config-card p-5">
+                    <p class="text-sm text-gray-400">Total Users</p>
+                    <p id="admin-total-users" class="text-2xl font-bold accent-primary">0</p>
+                </div>
+                <div class="config-card p-5">
+                    <p class="text-sm text-gray-400">Total Accounts</p>
+                    <p id="admin-total-accounts" class="text-2xl font-bold accent-primary">0</p>
+                </div>
+                <div class="config-card p-5">
+                    <p class="text-sm text-gray-400">Total Logs</p>
+                    <p id="admin-total-logs" class="text-2xl font-bold accent-primary">0</p>
+                </div>
+                <div class="config-card p-5">
+                    <p class="text-sm text-gray-400">Recent Activity</p>
+                    <p id="admin-recent-activity" class="text-lg font-bold accent-primary">-</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="mb-6">
+                <div class="flex space-x-2 border-b border-gray-700">
+                    <button onclick="showAdminTab('accounts')" id="admin-tab-accounts" class="admin-tab active px-4 py-2 font-bold border-b-2 border-accent-primary text-accent-primary">
+                        All Accounts
+                    </button>
+                    <button onclick="showAdminTab('logs')" id="admin-tab-logs" class="admin-tab px-4 py-2 font-bold border-b-2 border-transparent text-gray-400 hover:text-primary">
+                        Activity Logs
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accounts Tab -->
+            <div id="admin-accounts-tab" class="admin-tab-content">
+                <div class="config-card p-5 mb-4">
+                    <h2 class="text-xl font-bold mb-4">All User Accounts</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b border-gray-700">
+                                    <th class="px-4 py-2">User</th>
+                                    <th class="px-4 py-2">Username</th>
+                                    <th class="px-4 py-2">Region</th>
+                                    <th class="px-4 py-2">Status</th>
+                                    <th class="px-4 py-2">Level</th>
+                                    <th class="px-4 py-2">Skins</th>
+                                    <th class="px-4 py-2">Added Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-accounts-table-body" class="text-sm">
+                                <tr><td colspan="7" class="px-4 py-4 text-center text-gray-400">Loading accounts...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs Tab -->
+            <div id="admin-logs-tab" class="admin-tab-content hidden">
+                <div class="config-card p-5">
+                    <h2 class="text-xl font-bold mb-4">Activity Logs</h2>
+                    <div class="space-y-2 max-h-[600px] overflow-y-auto">
+                        <div id="admin-logs-container" class="space-y-2">
+                            <div class="text-center text-gray-400 py-4">Loading logs...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modal for Main Settings Entry Point -->
+    <div id="main-settings-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-bg rounded-xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h3 class="text-2xl font-bold flex items-center text-primary">
+                     <i data-lucide="settings" class="w-6 h-6 mr-2 accent-primary"></i> <span data-translate="applicationSettings">Application Settings</span>
+                </h3>
+                <button onclick="closeMainSettingsModal()" class="text-gray-400 hover:text-primary transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <p class="text-gray-400 mb-6 text-sm" data-translate="configureAspects">Configure different aspects of the viewer interface.</p>
+            
+            <div class="space-y-3">
+                <!-- Profile Picture Settings Button - NEW -->
+                <button id="open-profile-picture-settings-btn" class="w-full utility-btn font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <i data-lucide="user-circle" class="w-5 h-5 mr-2 accent-primary"></i> <span data-translate="profilePictureSettings">Profile Picture Settings</span>
+                </button>
+
+                <!-- Language Settings Button - NEW -->
+                <button id="open-language-settings-btn" class="w-full utility-btn font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <i data-lucide="languages" class="w-5 h-5 mr-2 accent-primary"></i> <span data-translate="languageSettings">Language Settings</span>
+                </button>
+
+
+                <!-- Theme Settings Button - Uses Primary Accent Color -->
+                <button id="open-theme-settings-btn" class="w-full bg-accent-primary hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <i data-lucide="sun-moon" class="w-5 h-5 mr-2"></i> <span data-translate="themeSettings">Theme Settings</span>
+                </button>
+
+                <!-- Filter Toggles Button (NEW) - NOW UTILITY BUTTON -->
+                <button id="open-filter-toggles-btn" class="w-full utility-btn font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <i data-lucide="sliders" class="w-5 h-5 mr-2 accent-primary"></i> <span data-translate="filterDisplayConfig">Filter Display Configuration</span>
+                </button>
+                
+                <!-- Button to open Column Toggles Modal (Uses Primary Accent) -->
+                <button id="open-column-toggles-btn" class="w-full bg-accent-primary hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <i data-lucide="columns-2" class="w-5 h-5 mr-2"></i> <span data-translate="tableDisplayConfig">Table Display Configuration</span>
+                </button>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-700">
+                <!-- Logout Button -->
+                <button onclick="handleLogout(); closeMainSettingsModal();" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center mb-4">
+                    <i data-lucide="log-out" class="w-5 h-5 mr-2"></i> <span data-translate="logout">Logout</span>
+                </button>
+                
+                <div class="flex justify-end">
+                    <!-- Close Button - NOW UTILITY BUTTON -->
+                    <button onclick="closeMainSettingsModal()" class="utility-btn font-bold py-2 px-4 rounded-lg transition-colors" data-translate="close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for Theme Settings -->
+    <div id="theme-settings-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-bg rounded-xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h3 class="text-2xl font-bold flex items-center">
+                     <i data-lucide="sun-moon" class="w-6 h-6 mr-2 accent-primary"></i> Theme Configuration
+                </h3>
+                <button onclick="closeThemeSettingsModal()" class="text-gray-400 hover:text-primary transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <p class="text-gray-400 mb-6 text-sm">Select the visual theme for the application. Your preference will be saved.</p>
+            
+            <div class="space-y-4">
+                <!-- 1. Default Dark Red -->
+                <button id="set-theme-default-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="dark">
+                    <i data-lucide="droplets" class="w-5 h-5 mr-2"></i> Default (Valorant Red)
+                </button>
+                
+                <!-- 2. Obsidian Sentinel (Cyan) -->
+                <button id="set-theme-obsidian-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="obsidian">
+                    <i data-lucide="moon" class="w-5 h-5 mr-2"></i> Obsidian Sentinel (Dark Cyan)
+                </button>
+                
+                <!-- 3. Viper's Venom (Green) -->
+                <button id="set-theme-venom-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="venom">
+                    <i data-lucide="zap" class="w-5 h-5 mr-2"></i> Viper's Venom (Dark Green)
+                </button>
+
+                <!-- 4. Phoenix's Fire (Orange/Red) - NEW -->
+                <button id="set-theme-fire-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="fire">
+                    <i data-lucide="flame" class="w-5 h-5 mr-2"></i> Phoenix's Fire (Dark Orange)
+                </button>
+
+                <!-- 5. Omen's Shadow (Purple/Black) - NEW -->
+                <button id="set-theme-shadow-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="shadow">
+                    <i data-lucide="eclipse" class="w-5 h-5 mr-2"></i> Omen's Shadow (Dark Purple)
+                </button>
+
+                <!-- 6. Jett's Wind (Light Blue/Cyan) - NEW -->
+                <button id="set-theme-wind-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="wind">
+                    <i data-lucide="wind" class="w-5 h-5 mr-2"></i> Jett's Wind (Light Cyan)
+                </button>
+
+                <!-- 7. Sage's Healing (Soft Green) - NEW -->
+                <button id="set-theme-healing-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="healing">
+                    <i data-lucide="heart" class="w-5 h-5 mr-2"></i> Sage's Healing (Emerald Green)
+                </button>
+
+                <!-- 8. Reyna's Soul (Purple/Pink) - NEW -->
+                <button id="set-theme-soul-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="soul">
+                    <i data-lucide="sparkles" class="w-5 h-5 mr-2"></i> Reyna's Soul (Purple Pink)
+                </button>
+
+                <!-- 9. Neon's Electric (Bright Pink/Cyan) - NEW -->
+                <button id="set-theme-electric-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center theme-control-button" data-theme="electric">
+                    <i data-lucide="bolt" class="w-5 h-5 mr-2"></i> Neon's Electric (Bright Pink)
+                </button>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                <button onclick="closeThemeSettingsModal()" class="action-btn hover:bg-gray-500 font-bold py-2 px-4 rounded-lg transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Filter Toggle Settings (NEW) -->
+    <div id="filter-toggles-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-bg rounded-xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h3 class="text-2xl font-bold flex items-center">
+                     <i data-lucide="sliders" class="w-6 h-6 mr-2 accent-primary"></i> Filter Visibility Settings
+                </h3>
+                <button onclick="closeFilterTogglesModal()" class="text-gray-400 hover:text-primary transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p class="text-gray-400 mb-4 text-sm">Select which filter cards are displayed in the left configuration panel. Changes apply immediately.</p>
+            
+            <div id="filter-toggles-container" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <!-- Toggles will be rendered here -->
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                <button onclick="closeFilterTogglesModal()" class="bg-accent-primary hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    Close
+                </button>
+            </div>
+    </div>
+    </div>
+
+
+    <!-- Modal for Column Toggle Settings -->
+    <div id="column-toggles-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-bg rounded-xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h3 class="text-2xl font-bold flex items-center">
+                     <i data-lucide="columns-2" class="w-6 h-6 mr-2 accent-primary"></i> Column Visibility Settings
+                </h3>
+                <button onclick="closeColumnTogglesModal()" class="text-gray-400 hover:text-primary transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p class="text-gray-400 mb-4 text-sm">Select the columns you want to display in the main results table. Changes apply immediately.</p>
+            
+            <div id="column-toggles-container" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <!-- Toggles will be rendered here -->
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                <button onclick="closeColumnTogglesModal()" class="bg-accent-primary hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Language Settings -->
+    <div id="language-settings-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-bg rounded-xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h3 class="text-2xl font-bold flex items-center">
+                     <i data-lucide="languages" class="w-6 h-6 mr-2 accent-primary"></i> <span data-translate="languageSettings">Language Settings</span>
+                </h3>
+                <button onclick="closeLanguageSettingsModal()" class="text-gray-400 hover:text-primary transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p class="text-gray-400 mb-6 text-sm" data-translate="selectLanguage">Select your preferred language. Changes apply immediately.</p>
+            
+            <div class="space-y-3">
+                <!-- English Option -->
+                <button id="set-lang-en-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center language-control-button" data-lang="en">
+                    <i data-lucide="globe" class="w-5 h-5 mr-2"></i> English
+                </button>
+                
+                <!-- Arabic Option -->
+                <button id="set-lang-ar-btn" class="w-full action-btn font-bold py-3 px-4 rounded-lg transition-all border-2 border-transparent flex items-center justify-center language-control-button" data-lang="ar">
+                    <i data-lucide="globe" class="w-5 h-5 mr-2"></i> العربية (Arabic)
+                </button>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                <button onclick="closeLanguageSettingsModal()" class="action-btn hover:bg-gray-500 font-bold py-2 px-4 rounded-lg transition-colors" data-translate="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Profile Picture Settings -->
+    <div id="profile-picture-settings-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="modal-content-bg rounded-xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h3 class="text-2xl font-bold flex items-center">
+                    <i data-lucide="user-circle" class="w-6 h-6 mr-2 accent-primary"></i> <span data-translate="profilePictureSettings">Profile Picture Settings</span>
+                </h3>
+                <button onclick="closeProfilePictureSettingsModal()" class="text-gray-400 hover:text-primary transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p class="text-gray-400 mb-6 text-sm" data-translate="profilePictureDescription">Upload a custom profile picture for your account. Supported formats: JPG, PNG, GIF (animated GIFs supported). Max size: 2MB for images, 5MB for GIFs.</p>
+            
+            <div class="space-y-4">
+                <!-- Current Profile Picture Display -->
+                <div class="flex flex-col items-center">
+                    <img id="profile-picture-preview" src="" alt="Profile Preview" class="w-32 h-32 rounded-full border-4 border-gray-600 object-cover mb-4" style="display: none;">
+                    <div id="profile-picture-placeholder" class="w-32 h-32 rounded-full border-4 border-gray-600 bg-gray-700 flex items-center justify-center mb-4">
+                        <i data-lucide="user" class="w-16 h-16 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Upload Button -->
+                <label for="profile-picture-input" class="w-full bg-accent-primary hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center cursor-pointer">
+                    <i data-lucide="upload" class="w-5 h-5 mr-2"></i> <span data-translate="uploadProfilePicture">Upload Profile Picture</span>
+                </label>
+                <input type="file" id="profile-picture-input" accept="image/jpeg,image/png,image/gif" class="hidden">
+                
+                <!-- Remove Button -->
+                <button onclick="removeProfilePicture()" class="w-full utility-btn font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <i data-lucide="trash-2" class="w-5 h-5 mr-2 accent-primary"></i> <span data-translate="removeProfilePicture">Remove Profile Picture</span>
+                </button>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                <button onclick="closeProfilePictureSettingsModal()" class="action-btn hover:bg-gray-500 font-bold py-2 px-4 rounded-lg transition-colors" data-translate="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="file-input" accept=".json" multiple class="hidden">
+
+
+    <script>
+        // --- IndexedDB and Data Constants ---
+        const DB_NAME = 'ValorantCheckerDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'accounts';
+        const SETTINGS_KEY = 'valorantColumnSettings'; 
+        const FILTER_SETTINGS_KEY = 'valorantFilterSettings'; // NEW: Filter visibility key
+        const THEME_KEY = 'valorantAppTheme';
+        const LANGUAGE_KEY = 'valorantAppLanguage'; // NEW: Language preference key
+        const SESSION_KEY = 'valorantSessionUser';
+        const USERS_KEY = 'valorantUsers';
+        const PROFILE_PICTURE_KEY = 'valorantProfilePicture'; // Profile picture storage key
+        const ADMIN_LOGS_KEY = 'valorantAdminLogs'; // Admin activity logs
+        const ADMIN_USERNAME = 'grizzly';
+        const ADMIN_PASSWORD = 'vamos';
+        const MAX_RESULTS_DISPLAY = 1000; 
+
+        // Define how various regional tags map to the 4 primary display groups
+        const REGION_MAP = {
+            'eu': 'EU', 'emea': 'EU',
+            'na': 'NA',
+            'br': 'BR',
+            'ap': 'AP', 'latam': 'AP', 'kr': 'AP', 'sea': 'AP'
+        };
+
+        // --- Translation System ---
+        const translations = {
+            en: {
+                languageSettings: 'Language Settings',
+                themeSettings: 'Theme Settings',
+                filterDisplayConfig: 'Filter Display Configuration',
+                tableDisplayConfig: 'Table Display Configuration',
+                selectLanguage: 'Select your preferred language. Changes apply immediately.',
+                close: 'Close',
+                applicationSettings: 'Application Settings',
+                configureAspects: 'Configure different aspects of the viewer interface.',
+                valorantChecker: 'VALORANT Checker',
+                professionalVerification: 'Professional Account Verification',
+                settings: 'Settings',
+                euAccounts: 'EU Accounts',
+                naAccounts: 'NA Accounts',
+                brAccounts: 'BR Accounts',
+                apAccounts: 'AP Accounts',
+                sum: 'Sum',
+                showFilters: 'Show Filters',
+                hideFilters: 'Hide Filters',
+                resultsTable: 'Results Table',
+                addFiles: 'Add Files',
+                clear: 'Clear',
+                copy: 'Copy',
+                download: 'Download',
+                uploadJsonFiles: 'Upload JSON file(s) to get started, or wait for automatic backup data to load.',
+                accountDashboard: 'Account Dashboard',
+                accountDetails: 'Account Details',
+                competitiveStatus: 'Competitive Status',
+                inventoryCurrency: 'Inventory & Currency',
+                skinCollection: 'Skin Collection',
+                total: 'Total',
+                level: 'Level',
+                region: 'Region',
+                country: 'Country',
+                createdAt: 'Created At',
+                lastChecked: 'Last Checked',
+                currentRank: 'Current Rank',
+                peakRank: 'Peak Rank',
+                previousRank: 'Previous Rank',
+                lastActivity: 'Last Activity',
+                skinCount: 'Skin Count',
+                valorantPoints: 'Valorant Points',
+                radianitePoints: 'Radianite Points',
+                kingdomCredits: 'Kingdom Credits',
+                freeAgents: 'Free Agents',
+                noRecentGames: 'No recent games',
+                login: 'Login',
+                register: 'Register',
+                logout: 'Logout',
+                username: 'Username',
+                password: 'Password',
+                confirmPassword: 'Confirm Password',
+                dontHaveAccount: 'Don\'t have an account?',
+                alreadyHaveAccount: 'Already have an account?',
+                fillAllFields: 'Please fill all fields',
+                passwordsDoNotMatch: 'Passwords do not match',
+                passwordTooShort: 'Password must be at least 4 characters',
+                usernameExists: 'Username already exists',
+                registrationSuccess: 'Registration successful! Please login.',
+                registrationFailed: 'Registration failed. Please try again.',
+                loginSuccess: 'Login successful!',
+                loginFailed: 'Login failed. Please try again.',
+                invalidCredentials: 'Invalid username or password',
+                loggedOut: 'Logged out successfully',
+                welcomeUser: 'Welcome, {username}!',
+                profilePictureSettings: 'Profile Picture Settings',
+                profilePictureDescription: 'Upload a custom profile picture for your account. Supported formats: JPG, PNG, GIF (animated GIFs supported). Max size: 2MB for images, 5MB for GIFs.',
+                uploadProfilePicture: 'Upload Profile Picture',
+                removeProfilePicture: 'Remove Profile Picture',
+                profilePictureUploaded: 'Profile picture uploaded successfully!',
+                profilePictureRemoved: 'Profile picture removed successfully!',
+                profilePictureTooLarge: 'Profile picture is too large. Maximum size is {maxSize}.',
+                profilePictureInvalidFormat: 'Invalid file format. Please use JPG, PNG, or GIF.',
+                profilePictureUploadError: 'Error uploading profile picture. Please try again.',
+            },
+            ar: {
+                languageSettings: 'إعدادات اللغة',
+                themeSettings: 'إعدادات المظهر',
+                filterDisplayConfig: 'تكوين عرض المرشحات',
+                tableDisplayConfig: 'تكوين عرض الجدول',
+                selectLanguage: 'اختر لغتك المفضلة. التغييرات تطبق فوراً.',
+                close: 'إغلاق',
+                applicationSettings: 'إعدادات التطبيق',
+                configureAspects: 'قم بتكوين جوانب مختلفة من واجهة المشاهد.',
+                valorantChecker: 'مدقق فالورانت',
+                professionalVerification: 'التحقق الاحترافي للحساب',
+                settings: 'الإعدادات',
+                discord: 'ديسكورد',
+                euAccounts: 'حسابات الاتحاد الأوروبي',
+                naAccounts: 'حسابات أمريكا الشمالية',
+                brAccounts: 'حسابات البرازيل',
+                apAccounts: 'حسابات آسيا والمحيط الهادئ',
+                sum: 'المجموع',
+                showFilters: 'إظهار المرشحات',
+                hideFilters: 'إخفاء المرشحات',
+                resultsTable: 'جدول النتائج',
+                addFiles: 'إضافة ملفات',
+                clear: 'مسح',
+                copy: 'نسخ',
+                download: 'تحميل',
+                uploadJsonFiles: 'قم بتحميل ملف(ات) JSON للبدء، أو انتظر تحميل بيانات النسخ الاحتياطي التلقائي.',
+                accountDashboard: 'لوحة معلومات الحساب',
+                accountDetails: 'تفاصيل الحساب',
+                competitiveStatus: 'حالة التنافس',
+                inventoryCurrency: 'المخزون والعملة',
+                skinCollection: 'مجموعة البشرة',
+                total: 'الإجمالي',
+                level: 'المستوى',
+                region: 'المنطقة',
+                country: 'الدولة',
+                createdAt: 'تاريخ الإنشاء',
+                lastChecked: 'آخر فحص',
+                currentRank: 'الرتبة الحالية',
+                peakRank: 'أعلى رتبة',
+                previousRank: 'الرتبة السابقة',
+                lastActivity: 'آخر نشاط',
+                skinCount: 'عدد البشرة',
+                valorantPoints: 'نقاط فالورانت',
+                radianitePoints: 'نقاط الراديانيت',
+                kingdomCredits: 'رصيد المملكة',
+                freeAgents: 'وكلاء مجانيون',
+                noRecentGames: 'لا توجد ألعاب حديثة',
+                login: 'تسجيل الدخول',
+                register: 'التسجيل',
+                logout: 'تسجيل الخروج',
+                username: 'اسم المستخدم',
+                password: 'كلمة المرور',
+                confirmPassword: 'تأكيد كلمة المرور',
+                dontHaveAccount: 'ليس لديك حساب؟',
+                alreadyHaveAccount: 'لديك حساب بالفعل؟',
+                fillAllFields: 'يرجى ملء جميع الحقول',
+                passwordsDoNotMatch: 'كلمات المرور غير متطابقة',
+                passwordTooShort: 'يجب أن تكون كلمة المرور 4 أحرف على الأقل',
+                usernameExists: 'اسم المستخدم موجود بالفعل',
+                registrationSuccess: 'تم التسجيل بنجاح! يرجى تسجيل الدخول.',
+                registrationFailed: 'فشل التسجيل. يرجى المحاولة مرة أخرى.',
+                loginSuccess: 'تم تسجيل الدخول بنجاح!',
+                loginFailed: 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.',
+                invalidCredentials: 'اسم المستخدم أو كلمة المرور غير صحيحة',
+                loggedOut: 'تم تسجيل الخروج بنجاح',
+                welcomeUser: 'مرحباً، {username}!',
+                profilePictureSettings: 'إعدادات صورة الملف الشخصي',
+                profilePictureDescription: 'قم بتحميل صورة ملف شخصي مخصصة لحسابك. الصيغ المدعومة: JPG، PNG، GIF (دعم GIF المتحركة). الحد الأقصى: 2 ميجابايت للصور، 5 ميجابايت لـ GIF.',
+                uploadProfilePicture: 'تحميل صورة الملف الشخصي',
+                removeProfilePicture: 'إزالة صورة الملف الشخصي',
+                profilePictureUploaded: 'تم تحميل صورة الملف الشخصي بنجاح!',
+                profilePictureRemoved: 'تم إزالة صورة الملف الشخصي بنجاح!',
+                profilePictureTooLarge: 'صورة الملف الشخصي كبيرة جداً. الحد الأقصى للحجم هو {maxSize}.',
+                profilePictureInvalidFormat: 'تنسيق الملف غير صالح. يرجى استخدام JPG أو PNG أو GIF.',
+                profilePictureUploadError: 'خطأ في تحميل صورة الملف الشخصي. يرجى المحاولة مرة أخرى.',
+            }
+        };
+
+        let currentLanguage = 'en';
+        let currentUser = null;
+        
+        // --- CORE COLUMN DEFINITIONS ---
+        const COLUMN_DEFAULTS = [
+            { key: 'status', label: 'STATUS', visible: true, source: 'account_status' },
+            { key: 'skins', label: 'SKINS', visible: true, source: 'skin_count' },
+            { key: 'level', label: 'LEVEL', visible: true, source: 'account_level' },
+            { key: 'region', label: 'REGION', visible: true, source: 'region' },
+            { key: 'country', label: 'COUNTRY', visible: true, source: 'country' },
+            { key: 'email', label: 'EMAIL', visible: true, source: 'email_verified' },
+            { key: 'username', label: 'USERNAME', visible: false, source: 'username' },
+            { key: 'password', label: 'PASSWORD', visible: false, source: 'password' },
+            { key: 'vp', label: 'VP', visible: false, source: 'valorant_points' },
+            { key: 'rad', label: 'RAD', visible: false, source: 'radianite_points' },
+            { key: 'kc', label: 'KC', visible: false, source: 'kingdom_credits' },
+            { key: 'last_activity', label: 'LAST ACTIVITY', visible: false, source: 'last_activity' },
+            { key: 'current_rank', label: 'CURRENT RANK', visible: false, source: 'current_rank' },
+            { key: 'peak_rank', label: 'PEAK RANK', visible: false, source: 'peak_rank' },
+        ];
+        
+        // --- FILTER DEFINITIONS (NEW) ---
+        const FILTER_SETTINGS = [
+            { 
+                key: 'region', 
+                label: 'Region Filter', 
+                icon: 'globe', 
+                visible: true,
+                render: () => `
+                    <div class="config-card p-4 col-span-1">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="globe" class="w-5 h-5 mr-2 accent-primary"></i> Region Filter
+                        </h2>
+                        <label for="region-filter" class="block text-sm font-medium mb-2 text-gray-400">Select Account Region (Live Update):</label>
+                        <select id="region-filter" 
+                               class="filter-select w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition">
+                            <option value="ALL">All Regions</option>
+                            <option value="EU">EU (Europe/EMEA)</option>
+                            <option value="NA">NA (North America)</option>
+                            <option value="BR">BR (Brazil)</option>
+                            <option value="AP">AP (Asia/Pacific, LATAM, KR)</option>
+                        </select>
+                    </div>
+                `
+            },
+            { 
+                key: 'status', 
+                label: 'Status Filter', 
+                icon: 'shield-check', 
+                visible: true,
+                render: () => `
+                    <div class="config-card p-4 col-span-1">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="shield-check" class="w-5 h-5 mr-2 accent-primary"></i> Status Filter
+                        </h2 >
+                        <label for="status-filter" class="block text-sm font-medium mb-2 text-gray-400">Select Account Status (Live Update):</label>
+                        <select id="status-filter" 
+                               class="filter-select w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition">
+                            <option value="ALL">All Statuses</option>
+                            <option value="VALID">VALID</option>
+                            <option value="BANNED">BANNED</option>
+                        </select>
+                    </div>
+                `
+            },
+            { 
+                key: 'skins', 
+                label: 'Skin Count Filter', 
+                icon: 'filter', 
+                visible: true,
+                render: () => `
+                    <div class="config-card p-4 col-span-1">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="filter" class="w-5 h-5 mr-2 accent-primary"></i> Skin Count Filter
+                        </h2 >
+                        <label for="min-skins" class="block text-sm font-medium mb-2 text-gray-400">Minimum Skins Required (Live Update):</label>
+                        <input type="number" id="min-skins" value="0" min="0" 
+                               class="input-style w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition"
+                               placeholder="e.g., 50">
+                    </div>
+                `
+            },
+            { 
+                key: 'level', 
+                label: 'Level Filter', 
+                icon: 'arrow-up-right', 
+                visible: true,
+                render: () => `
+                    <div class="config-card p-4 col-span-1">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="arrow-up-right" class="w-5 h-5 mr-2 accent-primary"></i> Level Filter
+                        </h2 >
+                        <label for="min-level-input" class="block text-sm font-medium mb-2 text-gray-400">Minimum Account Level (Live Update):</label>
+                        <input type="number" id="min-level-input" value="0" min="0" 
+                               class="input-style w-full py-2 px-3 rounded-md focus:ring-accent-primary focus:border-accent-primary transition"
+                               placeholder="e.g., 20">
+                    </div>
+                `
+            },
+        ];
+
+
+        // UI elements
+        const body = document.body;
+        const resultsTableHead = document.getElementById('results-table-head');
+        const resultsTableBody = document.getElementById('results-table-body');
+        const fileInput = document.getElementById('file-input');
+        const fileNameDisplay = document.getElementById('file-name-display');
+        const uploadFilesBtn = document.getElementById('upload-files-btn');
+        const filterContainer = document.getElementById('filter-container');
+        
+        // Filter elements (will be assigned after rendering)
+        let regionFilterSelect;
+        let minSkinsInput;
+        let statusFilterSelect; 
+        let minLevelInput;   
+        
+        // Settings elements
+        const openSettingsBtn = document.getElementById('open-settings-btn');
+        const mainSettingsModal = document.getElementById('main-settings-modal'); 
+        
+        // Column Toggles
+        const columnTogglesModal = document.getElementById('column-toggles-modal'); 
+        const openColumnTogglesBtn = document.getElementById('open-column-toggles-btn'); 
+        const columnTogglesContainer = document.getElementById('column-toggles-container');
+        
+        // Theme Settings
+        const themeSettingsModal = document.getElementById('theme-settings-modal');
+        const openThemeSettingsBtn = document.getElementById('open-theme-settings-btn');
+        
+        // Filter Toggle Elements (NEW)
+        const filterTogglesModal = document.getElementById('filter-toggles-modal');
+        const openFilterTogglesBtn = document.getElementById('open-filter-toggles-btn');
+        const filterTogglesContainer = document.getElementById('filter-toggles-container');
+        
+        // Profile Picture Settings Elements (NEW)
+        const profilePictureSettingsModal = document.getElementById('profile-picture-settings-modal');
+        const openProfilePictureSettingsBtn = document.getElementById('open-profile-picture-settings-btn');
+        const profilePictureInput = document.getElementById('profile-picture-input');
+        const profilePicturePreview = document.getElementById('profile-picture-preview');
+        const profilePicturePlaceholder = document.getElementById('profile-picture-placeholder');
+        const userProfilePicture = document.getElementById('user-profile-picture');
+
+        // Language Settings Elements (NEW)
+        const languageSettingsModal = document.getElementById('language-settings-modal');
+        const openLanguageSettingsBtn = document.getElementById('open-language-settings-btn');
+
+
+        // Filter toggle elements (mobile)
+        const toggleFiltersBtn = document.getElementById('toggle-filters-btn');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const toggleText = document.getElementById('toggle-text');
+
+        let parsedData = []; 
+        let columnSettings = []; 
+        let filterSettings = FILTER_SETTINGS; // Use the defined array
+        let db = null;
+
+
+        // --- IndexedDB Setup and Operations (The Backup System) ---
+        function openDatabase() {
+            return new Promise((resolve, reject) => {
+                // Use user-specific DB name if logged in
+                const dbName = currentUser ? `${DB_NAME}_${currentUser}` : DB_NAME;
+                const request = indexedDB.open(dbName, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    const database = event.target.result;
+                    if (!database.objectStoreNames.contains(STORE_NAME)) {
+                        database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    const database = event.target.result;
+                    db = database; // Update global db variable
+                    resolve(database);
+                };
+
+                request.onerror = (event) => {
+                    console.error("IndexedDB error:", event.target.error);
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        async function saveBackup(data) {
+            try {
+                if (!currentUser) {
+                    console.log("No user logged in, cannot save backup");
+                    return;
+                }
+                
+                // Always get a fresh database connection to ensure we're using the correct user's database
+                const userDb = await openDatabase();
+                
+                const transaction = userDb.transaction(STORE_NAME, 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+
+                // Clear existing data (since we only keep one large backup array)
+                await new Promise((resolve, reject) => {
+                    const clearRequest = store.clear();
+                    clearRequest.onsuccess = resolve;
+                    clearRequest.onerror = reject;
+                });
+                
+                // Store the entire data array as a single object
+                await new Promise((resolve, reject) => {
+                    // Using a fixed key if available, otherwise rely on autoIncrement
+                    const key = 1; 
+                    const addRequest = store.put({ id: key, data: data }); 
+                    addRequest.onsuccess = () => {
+                        console.log(`IndexedDB Backup: Saved ${data.length} accounts for user: ${currentUser}`);
+                        resolve();
+                    };
+                    addRequest.onerror = (e) => {
+                        console.error("Error saving backup:", e);
+                        reject(e);
+                    };
+                });
+
+            } catch (e) {
+                console.error("Failed to save IndexedDB backup:", e);
+            }
+        }
+
+        async function loadBackup() {
+            try {
+                if (!currentUser) {
+                    console.log("No user logged in, cannot load backup");
+                    return [];
+                }
+                
+                // Always get a fresh database connection to ensure we're using the correct user's database
+                const userDb = await openDatabase();
+                
+                const transaction = userDb.transaction(STORE_NAME, 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                
+                const request = store.get(1); // Retrieve the single backup object
+                
+                return await new Promise((resolve, reject) => {
+                    request.onsuccess = (event) => {
+                        const result = event.target.result;
+                        if (result && result.data) {
+                            const data = result.data || [];
+                            console.log(`Loaded ${data.length} accounts from backup for user: ${currentUser}`);
+                            resolve(data);
+                        } else {
+                            console.log(`No saved data found for user: ${currentUser}`);
+                            resolve([]);
+                        }
+                    };
+                    request.onerror = (e) => {
+                        console.error("Error loading backup:", e);
+                        reject(e);
+                    };
+                });
+
+            } catch (e) {
+                console.error("Failed to load IndexedDB backup:", e);
+                return []; 
+            }
+        }
+        
+        async function clearBackup() {
+             try {
+                if (!currentUser) {
+                    console.log("No user logged in, cannot clear backup");
+                    return;
+                }
+                const userDb = await openDatabase();
+                const transaction = userDb.transaction(STORE_NAME, 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+
+                await new Promise((resolve, reject) => {
+                    const clearRequest = store.clear();
+                    clearRequest.onsuccess = resolve;
+                    clearRequest.onerror = reject;
+                });
+                console.log(`IndexedDB Backup: Cleared all data for user: ${currentUser}`);
+            } catch (e) {
+                console.error("Failed to clear IndexedDB backup:", e);
+            }
+        }
+
+
+        // --- Settings Persistence (Column & Filter Visibility) ---
+
+        function loadColumnSettings() {
+            try {
+                const savedSettings = localStorage.getItem(SETTINGS_KEY);
+                if (savedSettings) {
+                    const savedColumns = JSON.parse(savedSettings);
+                    
+                    // Merge saved settings with current defaults to handle new fields
+                    const mergedSettings = COLUMN_DEFAULTS.map(defaultCol => {
+                        const savedCol = savedColumns.find(sc => sc.key === defaultCol.key);
+                        if (savedCol) {
+                            return { ...defaultCol, visible: savedCol.visible };
+                        }
+                        return defaultCol;
+                    });
+                    
+                    columnSettings = mergedSettings;
+                    return;
+                }
+            } catch (e) {
+                console.warn("Could not load column settings from localStorage, using defaults.", e);
+            }
+            // Fallback to defaults
+            columnSettings = COLUMN_DEFAULTS;
+        }
+
+        function saveColumnSettings() {
+            try {
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify(columnSettings));
+                console.log("Column settings saved to localStorage.");
+            } catch (e) {
+                console.error("Failed to save column settings:", e);
+            }
+        }
+        
+        // NEW: Filter Settings Persistence
+        function loadFilterSettings() {
+            try {
+                const savedSettings = localStorage.getItem(FILTER_SETTINGS_KEY);
+                if (savedSettings) {
+                    const savedFilters = JSON.parse(savedSettings);
+                    
+                    const mergedSettings = FILTER_SETTINGS.map(defaultFilter => {
+                        const savedFilter = savedFilters.find(sf => sf.key === defaultFilter.key);
+                        if (savedFilter) {
+                            return { ...defaultFilter, visible: savedFilter.visible };
+                        }
+                        return defaultFilter;
+                    });
+                    
+                    filterSettings = mergedSettings;
+                    return;
+                }
+            } catch (e) {
+                console.warn("Could not load filter settings from localStorage, using defaults.", e);
+            }
+            // Fallback to defaults (already set in FILTER_SETTINGS)
+        }
+        
+        function saveFilterSettings() {
+            try {
+                // Only save the keys and visibility flags
+                const simplifiedSettings = filterSettings.map(f => ({ key: f.key, visible: f.visible }));
+                localStorage.setItem(FILTER_SETTINGS_KEY, JSON.stringify(simplifiedSettings));
+                console.log("Filter settings saved to localStorage.");
+            } catch (e) {
+                console.error("Failed to save filter settings:", e);
+            }
+        }
+
+        
+        // --- Language Settings Logic ---
+        
+        function getStoredLanguage() {
+            const storedLang = localStorage.getItem(LANGUAGE_KEY);
+            if (storedLang === 'ar' || storedLang === 'en') {
+                return storedLang;
+            }
+            return 'en'; // Default to English
+        }
+
+        function setLanguage(langCode) {
+            if (langCode !== 'en' && langCode !== 'ar') {
+                langCode = 'en';
+            }
+            localStorage.setItem(LANGUAGE_KEY, langCode);
+            currentLanguage = langCode;
+            
+            // Apply RTL for Arabic
+            if (langCode === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+            }
+            
+            applyTranslations();
+            updateLanguageSelectionUI(langCode);
+        }
+
+        function loadLanguage() {
+            setLanguage(getStoredLanguage());
+        }
+
+        function translate(key) {
+            return translations[currentLanguage][key] || translations['en'][key] || key;
+        }
+
+        function applyTranslations() {
+            // Translate all elements with data-translate attribute
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = translate(key);
+            });
+        }
+
+        function updateLanguageSelectionUI(currentLang) {
+            document.querySelectorAll('.language-control-button').forEach(button => {
+                if (button.dataset.lang === currentLang) {
+                    button.classList.add('bg-accent-primary', 'border-accent-primary', 'hover:bg-red-700', 'text-white');
+                    button.classList.remove('action-btn', 'text-primary');
+                } else {
+                    button.classList.remove('bg-accent-primary', 'border-accent-primary', 'hover:bg-red-700', 'text-white');
+                    button.classList.add('action-btn');
+                }
+            });
+        }
+
+        // Language Modal Functions
+        function openLanguageSettingsModal() {
+            updateLanguageSelectionUI(currentLanguage);
+            closeMainSettingsModal();
+            const languageModal = document.getElementById('language-settings-modal');
+            languageModal.classList.remove('hidden');
+            languageModal.classList.add('flex');
+        }
+
+        function closeLanguageSettingsModal() {
+            const languageModal = document.getElementById('language-settings-modal');
+            languageModal.classList.add('hidden');
+            languageModal.classList.remove('flex');
+        }
+
+        // --- Profile Picture Functions ---
+        
+        function getProfilePictureKey() {
+            return currentUser ? `${PROFILE_PICTURE_KEY}_${currentUser}` : PROFILE_PICTURE_KEY;
+        }
+
+        function saveProfilePicture(imageData) {
+            if (!currentUser) return;
+            const key = getProfilePictureKey();
+            localStorage.setItem(key, imageData);
+            updateProfilePictureDisplay();
+        }
+
+        function loadProfilePicture() {
+            if (!currentUser) return null;
+            const key = getProfilePictureKey();
+            return localStorage.getItem(key);
+        }
+
+        function removeProfilePicture() {
+            if (!currentUser) return;
+            const key = getProfilePictureKey();
+            localStorage.removeItem(key);
+            updateProfilePictureDisplay();
+            updateProfilePicturePreview();
+            alertBox(translate('profilePictureRemoved'), 'success');
+        }
+
+        function updateProfilePictureDisplay() {
+            if (!currentUser || !userProfilePicture) return;
+            const imageData = loadProfilePicture();
+            if (imageData) {
+                userProfilePicture.src = imageData;
+                userProfilePicture.style.display = 'block';
+            } else {
+                // No default profile picture - hide it if user hasn't uploaded one
+                userProfilePicture.style.display = 'none';
+            }
+        }
+
+        function updateProfilePicturePreview() {
+            const imageData = loadProfilePicture();
+            if (imageData && profilePicturePreview) {
+                profilePicturePreview.src = imageData;
+                profilePicturePreview.style.display = 'block';
+                if (profilePicturePlaceholder) {
+                    profilePicturePlaceholder.style.display = 'none';
+                }
+            } else {
+                // No default profile picture - show placeholder icon instead
+                if (profilePicturePreview) {
+                    profilePicturePreview.style.display = 'none';
+                }
+                if (profilePicturePlaceholder) {
+                    profilePicturePlaceholder.style.display = 'flex';
+                }
+            }
+        }
+
+        function openProfilePictureSettingsModal() {
+            updateProfilePicturePreview();
+            closeMainSettingsModal();
+            profilePictureSettingsModal.classList.remove('hidden');
+            profilePictureSettingsModal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeProfilePictureSettingsModal() {
+            profilePictureSettingsModal.classList.add('hidden');
+            profilePictureSettingsModal.classList.remove('flex');
+        }
+
+        function handleProfilePictureUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Check file type first
+            if (!file.type.match('image/(jpeg|jpg|png|gif)')) {
+                alertBox(translate('profilePictureInvalidFormat'), 'error');
+                return;
+            }
+
+            // Check file size - GIFs can be larger (5MB), other images 2MB
+            const isGif = file.type === 'image/gif';
+            const maxSize = isGif ? 5 * 1024 * 1024 : 2 * 1024 * 1024; // 5MB for GIF, 2MB for others
+            if (file.size > maxSize) {
+                const maxSizeMB = isGif ? '5MB' : '2MB';
+                alertBox(translate('profilePictureTooLarge').replace('{maxSize}', maxSizeMB), 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                saveProfilePicture(imageData);
+                updateProfilePicturePreview();
+                alertBox(translate('profilePictureUploaded'), 'success');
+            };
+            reader.onerror = function() {
+                alertBox(translate('profilePictureUploadError'), 'error');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // --- Theme Settings Logic ---
+        
+        function getStoredTheme() {
+            const storedTheme = localStorage.getItem(THEME_KEY);
+            // Valid dark themes: 'dark', 'obsidian', 'venom', 'fire', 'shadow', 'wind', 'healing', 'soul', 'electric'
+            const validThemes = ['dark', 'obsidian', 'venom', 'fire', 'shadow', 'wind', 'healing', 'soul', 'electric'];
+            
+            if (validThemes.includes(storedTheme)) {
+                return storedTheme;
+            }
+            // Default to 'dark' if theme is missing or an invalid (light) theme is stored
+            return 'dark'; 
+        }
+
+        function setTheme(themeName) {
+            localStorage.setItem(THEME_KEY, themeName);
+            
+            // Remove all theme classes first
+            body.classList.remove('theme-dark', 'theme-obsidian', 'theme-venom', 'theme-fire', 'theme-shadow', 
+                                  'theme-wind', 'theme-healing', 'theme-soul', 'theme-electric');
+            
+            // Apply the selected theme class
+            if (themeName === 'obsidian') {
+                body.classList.add('theme-obsidian');
+            } else if (themeName === 'venom') { 
+                body.classList.add('theme-venom');
+            } else if (themeName === 'fire') { 
+                body.classList.add('theme-fire');
+            } else if (themeName === 'shadow') { 
+                body.classList.add('theme-shadow');
+            } else if (themeName === 'wind') {
+                body.classList.add('theme-wind');
+            } else if (themeName === 'healing') {
+                body.classList.add('theme-healing');
+            } else if (themeName === 'soul') {
+                body.classList.add('theme-soul');
+            } else if (themeName === 'electric') {
+                body.classList.add('theme-electric');
+            } else {
+                // Includes 'dark' and any fallback
+                body.classList.add('theme-dark');
+            }
+            
+            updateThemeSelectionUI(themeName);
+        }
+
+        function loadTheme() {
+            setTheme(getStoredTheme());
+        }
+
+        function updateThemeSelectionUI(currentTheme) {
+            document.querySelectorAll('.theme-control-button').forEach(button => {
+                if (button.dataset.theme === currentTheme) {
+                    // Apply selected style: primary accent
+                    button.classList.add('bg-accent-primary', 'border-accent-primary', 'hover:bg-red-700', 'text-white');
+                    button.classList.remove('action-btn', 'text-primary');
+                } else {
+                    // Apply unselected style: action-btn (variable gray)
+                    button.classList.remove('bg-accent-primary', 'border-accent-primary', 'hover:bg-red-700', 'text-white');
+                    button.classList.add('action-btn');
+                }
+            });
+        }
+
+
+        // --- Modal UI Logic ---
+
+        function openMainSettingsModal() {
+            mainSettingsModal.classList.remove('hidden');
+            mainSettingsModal.classList.add('flex');
+        }
+
+        function closeMainSettingsModal() {
+            mainSettingsModal.classList.add('hidden');
+            mainSettingsModal.classList.remove('flex');
+        }
+
+        function openThemeSettingsModal() {
+            updateThemeSelectionUI(getStoredTheme());
+            closeMainSettingsModal(); 
+            themeSettingsModal.classList.remove('hidden');
+            themeSettingsModal.classList.add('flex');
+        }
+
+        function closeThemeSettingsModal() {
+            themeSettingsModal.classList.add('hidden');
+            themeSettingsModal.classList.remove('flex');
+        }
+        
+        // NEW: Filter Toggle Modal Logic
+        function openFilterTogglesModal() {
+            renderFilterTogglesUI();
+            closeMainSettingsModal(); 
+            filterTogglesModal.classList.remove('hidden');
+            filterTogglesModal.classList.add('flex');
+        }
+
+        function closeFilterTogglesModal() {
+            filterTogglesModal.classList.add('hidden');
+            filterTogglesModal.classList.remove('flex');
+        }
+
+
+        function handleFilterToggle(key, isChecked) {
+            const filter = filterSettings.find(f => f.key === key);
+            if (filter) {
+                filter.visible = isChecked;
+                saveFilterSettings();
+                renderFilters(); // Re-render the filters immediately
+            }
+        }
+        
+        function renderFilterTogglesUI() {
+            filterTogglesContainer.innerHTML = ''; 
+
+            filterSettings.forEach(filter => {
+                const div = document.createElement('div');
+                div.className = 'config-card p-3 flex justify-between items-center';
+                
+                div.innerHTML = `
+                    <label class="text-sm font-medium text-primary">${filter.label}</label>
+                    <label class="switch">
+                        <input type="checkbox" id="filter-toggle-${filter.key}" ${filter.visible ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                `;
+                filterTogglesContainer.appendChild(div);
+                
+                const input = document.getElementById(`filter-toggle-${filter.key}`);
+                input.addEventListener('change', (e) => handleFilterToggle(filter.key, e.target.checked));
+            });
+             lucide.createIcons(); // Re-render icons after adding new HTML
+        }
+
+        // Existing Column Toggle Logic
+        function openColumnTogglesModal() {
+            renderColumnTogglesUI();
+            closeMainSettingsModal(); 
+            columnTogglesModal.classList.remove('hidden');
+            columnTogglesModal.classList.add('flex');
+        }
+
+        function closeColumnTogglesModal() {
+            columnTogglesModal.classList.add('hidden');
+            columnTogglesModal.classList.remove('flex');
+        }
+        
+        function handleColumnToggle(key, isChecked) {
+            const column = columnSettings.find(col => col.key === key);
+            if (column) {
+                column.visible = isChecked;
+                saveColumnSettings();
+                processData(); // Rerender the table immediately
+            }
+        }
+
+        function renderColumnTogglesUI() {
+            columnTogglesContainer.innerHTML = ''; // Clear existing toggles
+
+            columnSettings.forEach(col => {
+                const div = document.createElement('div');
+                div.className = 'config-card p-3 flex justify-between items-center';
+                
+                div.innerHTML = `
+                    <label class="text-sm font-medium text-primary">${col.label}</label>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-${col.key}" ${col.visible ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                `;
+                columnTogglesContainer.appendChild(div);
+                
+                // Add event listener to the checkbox
+                const input = document.getElementById(`toggle-${col.key}`);
+                input.addEventListener('change', (e) => handleColumnToggle(col.key, e.target.checked));
+            });
+        }
+
+
+        // --- Initialization and Event Listeners ---
+
+        async function initializeApp() {
+            parsedData = [];
+            document.getElementById('stat-eu').textContent = '0';
+            document.getElementById('stat-na').textContent = '0';
+            document.getElementById('stat-br').textContent = '0';
+            document.getElementById('stat-ap').textContent = '0';
+            if (resultsTableBody) {
+                resultsTableBody.innerHTML = '<tr><td colspan="10" class="py-4 text-center text-gray-400" data-translate="uploadJsonFiles">Upload JSON file(s) to get started, or wait for automatic backup data to load.</td></tr>';
+            }
+            if (fileNameDisplay) fileNameDisplay.textContent = '';
+            try {
+                db = await openDatabase();
+                console.log(`Database initialized for user: ${currentUser}`);
+            } catch (e) {
+                console.error('Failed to initialize database:', e);
+            }
+            const userDisplay = document.getElementById('current-user-display');
+            if (userDisplay) {
+                userDisplay.textContent = currentUser; // Just show the username
+            }
+            updateProfilePictureDisplay(); // Load and display profile picture
+            lucide.createIcons();
+            loadLanguage();
+            loadColumnSettings();
+            loadFilterSettings();
+            loadTheme();
+            renderFilters();
+            setupEventListeners();
+            await loadDataFromBackup();
+            updateTableDisplay();
+            if (parsedData.length > 0) {
+                updateRegionalStats(parsedData);
+            }
+        }
+
+        function getUsers() {
+            try {
+                const raw = localStorage.getItem(USERS_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+
+        function showRegisterForm() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+        }
+
+        function showLoginForm() {
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function handleRegister() {
+            const u = document.getElementById('register-username').value.trim();
+            const p = document.getElementById('register-password').value;
+            const c = document.getElementById('register-confirm-password').value;
+            if (!u || !p || !c) { alertBox(translate('fillAllFields'), 'error'); return; }
+            if (p.length < 4) { alertBox(translate('passwordTooShort'), 'error'); return; }
+            if (p !== c) { alertBox(translate('passwordsDoNotMatch'), 'error'); return; }
+            const users = getUsers();
+            if (users.find(x => x.username.toLowerCase() === u.toLowerCase())) { alertBox(translate('usernameExists'), 'error'); return; }
+            users.push({ username: u, password: btoa('v:' + p) });
+            saveUsers(users);
+            alertBox(translate('registrationSuccess'), 'success');
+            showLoginForm();
+        }
+
+        function handleLogin() {
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value;
+            if (!u || !p) { alertBox(translate('fillAllFields'), 'error'); return; }
+            
+            // Check for admin login
+            if (u.toLowerCase() === ADMIN_USERNAME.toLowerCase() && p === ADMIN_PASSWORD) {
+                addLog('admin_login', 'Admin logged in', ADMIN_USERNAME);
+                db = null;
+                localStorage.setItem(SESSION_KEY, ADMIN_USERNAME);
+                currentUser = ADMIN_USERNAME;
+                document.getElementById('auth-modal').classList.add('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+                document.getElementById('admin-app').classList.remove('hidden');
+                initializeAdminDashboard();
+                alertBox('Admin login successful!', 'success');
+                return;
+            }
+            
+            const users = getUsers();
+            const user = users.find(x => x.username.toLowerCase() === u.toLowerCase() && x.password === btoa('v:' + p));
+            if (!user) { alertBox(translate('invalidCredentials'), 'error'); return; }
+            
+            // Log regular user login
+            addLog('user_login', `User logged in: ${user.username}`, user.username);
+            
+            // Reset database connection to ensure we connect to the correct user's database
+            db = null;
+            localStorage.setItem(SESSION_KEY, user.username);
+            currentUser = user.username;
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            if (document.getElementById('admin-app')) {
+                document.getElementById('admin-app').classList.add('hidden');
+            }
+            initializeApp();
+            alertBox(translate('loginSuccess'), 'success');
+        }
+
+        function handleLogout() {
+            // Reset database connection on logout
+            db = null;
+            localStorage.removeItem(SESSION_KEY);
+            currentUser = null;
+            parsedData = []; // Clear parsed data from memory (but keep in IndexedDB)
+            
+            // Clear UI without clearing the backup (data should persist for next login)
+            document.getElementById('stat-eu').textContent = 0;
+            document.getElementById('stat-na').textContent = 0;
+            document.getElementById('stat-br').textContent = 0;
+            document.getElementById('stat-ap').textContent = 0;
+            
+            if(minSkinsInput) minSkinsInput.value = 0;
+            if(regionFilterSelect) regionFilterSelect.value = 'ALL';
+            if(statusFilterSelect) statusFilterSelect.value = 'ALL'; 
+            if(minLevelInput) minLevelInput.value = 0;
+            
+            fileNameDisplay.textContent = '';
+            
+            // Clear the results table
+            const resultsTableBody = document.getElementById('results-table-body');
+            if (resultsTableBody) {
+                resultsTableBody.innerHTML = '';
+            }
+            
+            // Clear profile picture display
+            if (userProfilePicture) {
+                userProfilePicture.style.display = 'none';
+                userProfilePicture.src = '';
+            }
+            
+            document.getElementById('main-app').classList.add('hidden');
+            if (document.getElementById('admin-app')) {
+                document.getElementById('admin-app').classList.add('hidden');
+            }
+            document.getElementById('auth-modal').classList.remove('hidden');
+            const userDisplay = document.getElementById('current-user-display');
+            if (userDisplay) userDisplay.textContent = '';
+            alertBox(translate('loggedOut'), 'success');
+        }
+
+        function handleAdminLogout() {
+            addLog('admin_logout', 'Admin logged out', ADMIN_USERNAME);
+            db = null;
+            localStorage.removeItem(SESSION_KEY);
+            currentUser = null;
+            document.getElementById('admin-app').classList.add('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('auth-modal').classList.remove('hidden');
+            alertBox('Admin logged out successfully', 'success');
+        }
+
+        // --- Logging Functions ---
+        function addLog(type, message, username) {
+            try {
+                const logs = getLogs();
+                const logEntry = {
+                    id: Date.now(),
+                    type: type,
+                    message: message,
+                    username: username || 'system',
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toLocaleString()
+                };
+                logs.unshift(logEntry); // Add to beginning
+                // Keep only last 1000 logs
+                if (logs.length > 1000) {
+                    logs.splice(1000);
+                }
+                localStorage.setItem(ADMIN_LOGS_KEY, JSON.stringify(logs));
+            } catch (e) {
+                console.error('Error adding log:', e);
+            }
+        }
+
+        function getLogs() {
+            try {
+                const raw = localStorage.getItem(ADMIN_LOGS_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // --- Admin Dashboard Functions ---
+        async function initializeAdminDashboard() {
+            lucide.createIcons();
+            await loadAdminStats();
+            await loadAllAccounts();
+            loadAdminLogs();
+        }
+
+        async function loadAdminStats() {
+            const users = getUsers();
+            const logs = getLogs();
+            let totalAccounts = 0;
+            
+            // Count accounts from all users
+            for (const user of users) {
+                try {
+                    const userDbName = `${DB_NAME}_${user.username}`;
+                    const request = indexedDB.open(userDbName, DB_VERSION);
+                    await new Promise((resolve, reject) => {
+                        request.onsuccess = async (event) => {
+                            const db = event.target.result;
+                            try {
+                                const transaction = db.transaction(STORE_NAME, 'readonly');
+                                const store = transaction.objectStore(STORE_NAME);
+                                const getRequest = store.get(1);
+                                getRequest.onsuccess = (e) => {
+                                    const result = e.target.result;
+                                    if (result && result.data) {
+                                        totalAccounts += result.data.length;
+                                    }
+                                    db.close();
+                                    resolve();
+                                };
+                                getRequest.onerror = () => { db.close(); resolve(); };
+                            } catch (e) {
+                                db.close();
+                                resolve();
+                            }
+                        };
+                        request.onerror = () => resolve();
+                    });
+                } catch (e) {
+                    console.error(`Error loading data for user ${user.username}:`, e);
+                }
+            }
+
+            document.getElementById('admin-total-users').textContent = users.length;
+            document.getElementById('admin-total-accounts').textContent = totalAccounts;
+            document.getElementById('admin-total-logs').textContent = logs.length;
+            
+            if (logs.length > 0) {
+                const recent = logs[0];
+                document.getElementById('admin-recent-activity').textContent = recent.message.substring(0, 30) + '...';
+            }
+        }
+
+        async function loadAllAccounts() {
+            const users = getUsers();
+            const allAccounts = [];
+            
+            for (const user of users) {
+                try {
+                    const userDbName = `${DB_NAME}_${user.username}`;
+                    const request = indexedDB.open(userDbName, DB_VERSION);
+                    await new Promise((resolve, reject) => {
+                        request.onsuccess = async (event) => {
+                            const db = event.target.result;
+                            try {
+                                const transaction = db.transaction(STORE_NAME, 'readonly');
+                                const store = transaction.objectStore(STORE_NAME);
+                                const getRequest = store.get(1);
+                                getRequest.onsuccess = (e) => {
+                                    const result = e.target.result;
+                                    if (result && result.data) {
+                                        result.data.forEach(account => {
+                                            allAccounts.push({
+                                                ...account,
+                                                addedBy: user.username,
+                                                addedDate: account.addedDate || 'Unknown'
+                                            });
+                                        });
+                                    }
+                                    db.close();
+                                    resolve();
+                                };
+                                getRequest.onerror = () => { db.close(); resolve(); };
+                            } catch (e) {
+                                db.close();
+                                resolve();
+                            }
+                        };
+                        request.onerror = () => resolve();
+                    });
+                } catch (e) {
+                    console.error(`Error loading accounts for user ${user.username}:`, e);
+                }
+            }
+
+            const tbody = document.getElementById('admin-accounts-table-body');
+            if (allAccounts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-400">No accounts found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            allAccounts.forEach(account => {
+                const status = account.account_status && account.account_status.includes("BAN") ? 'BANNED' : 'VALID';
+                const statusClass = status === 'BANNED' ? 'text-red-400' : 'text-green-400';
+                const row = `
+                    <tr class="border-b border-gray-700 hover:bg-gray-800">
+                        <td class="px-4 py-2">${account.addedBy || 'Unknown'}</td>
+                        <td class="px-4 py-2">${account.username || 'N/A'}</td>
+                        <td class="px-4 py-2">${(account.region || 'N/A').toUpperCase()}</td>
+                        <td class="px-4 py-2"><span class="${statusClass}">${status}</span></td>
+                        <td class="px-4 py-2">${account.account_level || 'N/A'}</td>
+                        <td class="px-4 py-2">${account.skin_count || 0}</td>
+                        <td class="px-4 py-2">${account.addedDate || 'Unknown'}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function loadAdminLogs() {
+            const logs = getLogs();
+            const container = document.getElementById('admin-logs-container');
+            
+            if (logs.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 py-4">No logs available</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            logs.forEach(log => {
+                const typeColors = {
+                    'admin_login': 'text-blue-400',
+                    'admin_logout': 'text-blue-400',
+                    'user_login': 'text-green-400',
+                    'account_added': 'text-yellow-400',
+                    'default': 'text-gray-400'
+                };
+                const color = typeColors[log.type] || typeColors.default;
+                const logEntry = `
+                    <div class="p-3 bg-gray-800 rounded-lg border-l-4 border-accent-primary">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="${color} font-semibold">[${log.type.toUpperCase()}]</span>
+                                <span class="text-gray-300 ml-2">${log.message}</span>
+                            </div>
+                            <div class="text-xs text-gray-500 ml-4">${log.date}</div>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-1">User: ${log.username}</div>
+                    </div>
+                `;
+                container.innerHTML += logEntry;
+            });
+        }
+
+        function showAdminTab(tabName) {
+            // Hide all tabs
+            document.getElementById('admin-accounts-tab').classList.add('hidden');
+            document.getElementById('admin-logs-tab').classList.add('hidden');
+            
+            // Remove active class from all tab buttons
+            document.getElementById('admin-tab-accounts').classList.remove('active', 'border-accent-primary', 'text-accent-primary');
+            document.getElementById('admin-tab-accounts').classList.add('border-transparent', 'text-gray-400');
+            document.getElementById('admin-tab-logs').classList.remove('active', 'border-accent-primary', 'text-accent-primary');
+            document.getElementById('admin-tab-logs').classList.add('border-transparent', 'text-gray-400');
+            
+            // Show selected tab
+            if (tabName === 'accounts') {
+                document.getElementById('admin-accounts-tab').classList.remove('hidden');
+                document.getElementById('admin-tab-accounts').classList.add('active', 'border-accent-primary', 'text-accent-primary');
+                document.getElementById('admin-tab-accounts').classList.remove('border-transparent', 'text-gray-400');
+            } else if (tabName === 'logs') {
+                document.getElementById('admin-logs-tab').classList.remove('hidden');
+                document.getElementById('admin-tab-logs').classList.add('active', 'border-accent-primary', 'text-accent-primary');
+                document.getElementById('admin-tab-logs').classList.remove('border-transparent', 'text-gray-400');
+            }
+        }
+
+
+        window.onload = async function() {
+            const savedUser = localStorage.getItem(SESSION_KEY);
+            if (!savedUser) {
+                return;
+            }
+            // Reset database connection to ensure we connect to the correct user's database
+            db = null;
+            currentUser = savedUser;
+            
+            // Check if admin
+            if (savedUser === ADMIN_USERNAME) {
+                document.getElementById('auth-modal').classList.add('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+                document.getElementById('admin-app').classList.remove('hidden');
+                await initializeAdminDashboard();
+            } else {
+                document.getElementById('auth-modal').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                if (document.getElementById('admin-app')) {
+                    document.getElementById('admin-app').classList.add('hidden');
+                }
+                await initializeApp();
+            }
+        };
+
+
+        function parseFragment(hash) {
+            const out = {};
+            (hash || '').substring(1).split('&').forEach(p => { const i = p.indexOf('='); if (i > -1) { out[decodeURIComponent(p.slice(0, i))] = decodeURIComponent(p.slice(i + 1)); } });
+            return out;
+        }
+
+        function openExternal(url) {
+            try {
+                const w = window.open(url, '_blank', 'noopener,noreferrer');
+                if (!w) {
+                    window.location.href = url;
+                }
+            } catch (e) {
+                window.location.href = url;
+            }
+        }
+
+        function setupEventListeners() {
+            toggleFiltersBtn.addEventListener('click', toggleFilters, false);
+            uploadFilesBtn.addEventListener('click', () => { fileInput.click(); });
+            fileInput.addEventListener('change', handleFileSelect, false);
+            
+            // --- SETTINGS MODAL LISTENERS (FIXED) ---
+            openSettingsBtn.addEventListener('click', openMainSettingsModal, false);
+            openThemeSettingsBtn.addEventListener('click', openThemeSettingsModal, false);
+            openColumnTogglesBtn.addEventListener('click', openColumnTogglesModal, false);
+            openFilterTogglesBtn.addEventListener('click', openFilterTogglesModal, false); // NEW Listener for filters
+            openLanguageSettingsBtn.addEventListener('click', openLanguageSettingsModal, false); // NEW Listener for language
+            openProfilePictureSettingsBtn.addEventListener('click', openProfilePictureSettingsModal, false); // NEW Listener for profile picture
+            if (profilePictureInput) {
+                profilePictureInput.addEventListener('change', handleProfilePictureUpload, false);
+            }
+            
+            // Theme selector buttons
+            document.querySelectorAll('.theme-control-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const themeName = e.currentTarget.dataset.theme;
+                    setTheme(themeName);
+                    closeThemeSettingsModal();
+                });
+            });
+            
+            // Language selector buttons
+            document.querySelectorAll('.language-control-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const langCode = e.currentTarget.dataset.lang;
+                    setLanguage(langCode);
+                    closeLanguageSettingsModal();
+                });
+            });
+        }
+        
+        function attachFilterListeners() {
+            // Assign global variables to the newly rendered elements
+            regionFilterSelect = document.getElementById('region-filter');
+            minSkinsInput = document.getElementById('min-skins');
+            statusFilterSelect = document.getElementById('status-filter');
+            minLevelInput = document.getElementById('min-level-input'); 
+
+            // Clear and Re-attach listeners only to the elements that exist
+            if (regionFilterSelect) regionFilterSelect.addEventListener('change', processData, false);
+            if (minSkinsInput) minSkinsInput.addEventListener('input', processData, false); 
+            if (statusFilterSelect) statusFilterSelect.addEventListener('change', processData, false); 
+            if (minLevelInput) minLevelInput.addEventListener('input', processData, false);     
+
+            processData(); // Re-process data after filters might have changed visibility or values
+        }
+
+        function renderFilters() {
+            filterContainer.innerHTML = '';
+            
+            let filterHTML = '';
+            filterSettings.forEach(filter => {
+                if (filter.visible) {
+                    filterHTML += filter.render();
+                }
+            });
+            
+            filterContainer.innerHTML = filterHTML;
+            lucide.createIcons();
+            attachFilterListeners();
+        }
+
+
+        function toggleFilters() {
+            filterContainer.classList.toggle('hidden');
+            const isHidden = filterContainer.classList.contains('hidden');
+            
+            if (isHidden) {
+                filterContainer.classList.remove('grid', 'lg:grid');
+                toggleIcon.style.transform = 'rotate(0deg)';
+                toggleText.textContent = translate('showFilters');
+            } else {
+                 filterContainer.classList.add('grid', 'lg:grid');
+                toggleIcon.style.transform = 'rotate(180deg)';
+                toggleText.textContent = translate('hideFilters');
+            }
+        }
+
+
+        // --- Data Persistence and Processing ---
+        
+        async function loadDataFromBackup() {
+            if (!currentUser) {
+                console.log("No user logged in, cannot load data");
+                return;
+            }
+            
+            const data = await loadBackup();
+            if (Array.isArray(data) && data.length > 0) {
+                parsedData = data;
+                updateRegionalStats(parsedData);
+                processData(); 
+                console.log(`Loaded ${parsedData.length} account(s) from backup for user: ${currentUser}`);
+                // Don't show alert on initial load to avoid spam
+            } else {
+                console.log(`No previous backup found for user: ${currentUser}`);
+            }
+        }
+
+        function handleFileSelect(e) {
+            processAllFiles(e.target.files);
+            e.target.value = null; 
+        }
+
+        function readJsonFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        resolve(JSON.parse(event.target.result));
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
+                reader.onerror = (e) => reject(e);
+                reader.readAsText(file);
+            });
+        }
+        
+        async function processAllFiles(files) {
+            const newData = [];
+            fileNameDisplay.textContent = `Loading ${files.length} file(s)...`;
+
+            const fileArray = Array.from(files); 
+
+            for (const file of fileArray) {
+                try {
+                    const data = await readJsonFileContent(file);
+                    let accounts = [];
+
+                    // Logic to handle single object or array of objects
+                    if (Array.isArray(data)) {
+                        accounts = data;
+                    } else if (typeof data === 'object' && data !== null) {
+                        accounts = [data]; 
+                    } else {
+                        console.warn(`File ${file.name} contained invalid or unexpected JSON structure.`);
+                        continue;
+                    }
+                    
+                    // Filter out any entries that aren't valid account objects (basic check)
+                    const validAccounts = accounts.filter(acc => acc && typeof acc.puuid === 'string');
+                    newData.push(...validAccounts);
+
+                } catch (e) {
+                    console.error(`Error processing file ${file.name}:`, e);
+                    alertBox(`Error processing file ${file.name}. Ensure it is valid JSON.`, "error");
+                    fileNameDisplay.textContent = `Error loading file(s).`;
+                    return; 
+                }
+            }
+
+            const initialCount = parsedData.length;
+            parsedData.push(...newData);
+            const addedCount = parsedData.length - initialCount;
+
+            updateRegionalStats(parsedData);
+            
+            if (parsedData.length > 0) {
+                // Log account addition
+                if (currentUser && addedCount > 0) {
+                    newData.forEach(account => {
+                        account.addedDate = new Date().toLocaleString();
+                    });
+                    addLog('account_added', `Added ${addedCount} account(s) (Total: ${parsedData.length})`, currentUser);
+                }
+                
+                await saveBackup(parsedData); 
+                alertBox(`Successfully added ${addedCount} new account(s). Total loaded: ${parsedData.length}. **Backed up automatically!**`, 'success');
+                processData(); 
+            } else {
+                alertBox("No valid account data was loaded.", 'warning');
+            }
+            
+            // Display loaded file names
+            const fileNames = fileArray.map(f => f.name);
+            const displayNames = fileNames.length > 3 
+                ? `${fileNames.slice(0, 3).join(', ')} and ${fileNames.length - 3} more...` 
+                : fileNames.join(', ');
+            fileNameDisplay.textContent = `Last loaded: ${displayNames}`;
+        }
+
+        function updateRegionalStats(data) {
+            const counts = { eu: 0, na: 0, br: 0, ap: 0 };
+            data.forEach(account => {
+                const normalized = normalizeRegion(account.region);
+                if (counts.hasOwnProperty(normalized.toLowerCase())) {
+                     counts[normalized.toLowerCase()]++;
+                }
+            });
+            
+            document.getElementById('stat-eu').textContent = counts.eu;
+            document.getElementById('stat-na').textContent = counts.na;
+            document.getElementById('stat-br').textContent = counts.br;
+            document.getElementById('stat-ap').textContent = counts.ap;
+        }
+
+        function processData() {
+            updateTableDisplay(); // Always update headers before rendering body
+            
+            if (parsedData.length === 0) {
+                resultsTableBody.innerHTML = '<tr><td colspan="10" class="py-4 text-center text-gray-400">Upload JSON file(s) to get started.</td></tr>';
+                return;
+            }
+            
+            // Safely get filter values (will be null if the element is not visible/rendered)
+            const minSkins = (minSkinsInput && parseInt(minSkinsInput.value)) || 0; 
+            const selectedRegion = (regionFilterSelect && regionFilterSelect.value) || 'ALL'; 
+            const selectedStatus = (statusFilterSelect && statusFilterSelect.value) || 'ALL'; 
+            const minLevel = (minLevelInput && parseInt(minLevelInput.value)) || 0;     
+
+
+            // Apply filters
+            const filteredData = parsedData.filter(account => {
+                
+                // 1. Skin Filter (Only apply if filter is visible/defined)
+                let passesSkinFilter = true;
+                if (minSkinsInput) {
+                    const skinCount = parseInt(account.skin_count) || 0; 
+                    passesSkinFilter = skinCount >= minSkins;
+                }
+                
+                // 2. Region Filter (Only apply if filter is visible/defined)
+                let passesRegionFilter = true;
+                if (regionFilterSelect && selectedRegion !== 'ALL') {
+                    const normalizedAccountRegion = normalizeRegion(account.region);
+                    passesRegionFilter = normalizedAccountRegion === selectedRegion; 
+                }
+
+                // 3. Status Filter (Only apply if filter is visible/defined)
+                let passesStatusFilter = true;
+                if (statusFilterSelect) {
+                    const accountIsBanned = account.account_status && account.account_status.includes("BAN");
+                    if (selectedStatus === 'VALID') {
+                        passesStatusFilter = !accountIsBanned;
+                    } else if (selectedStatus === 'BANNED') {
+                        passesStatusFilter = accountIsBanned;
+                    }
+                }
+                
+                // 4. Level Filter (Only apply if filter is visible/defined)
+                let passesLevelFilter = true;
+                if (minLevelInput) {
+                    const accountLevel = parseInt(account.account_level) || 0;
+                    passesLevelFilter = accountLevel >= minLevel;
+                }
+                
+                // Combined Filter Result
+                return passesSkinFilter && passesRegionFilter && passesStatusFilter && passesLevelFilter;
+            });
+
+            // Apply Hardcoded Max Results Limit
+            const limitedData = filteredData.slice(0, MAX_RESULTS_DISPLAY);
+            
+            // Clear previous results
+            resultsTableBody.innerHTML = '';
+            
+            if (limitedData.length === 0) {
+                 resultsTableBody.innerHTML = `<tr><td colspan="10" class="py-4 text-center text-gray-400">No accounts found matching the filter criteria.</td></tr>`;
+            } else {
+                limitedData.forEach((account, index) => {
+                    const row = createTableRow(account, index + 1);
+                    resultsTableBody.appendChild(row);
+                });
+            }
+
+            if (filteredData.length > MAX_RESULTS_DISPLAY) {
+                alertBox(`Warning: Displaying first ${MAX_RESULTS_DISPLAY} of ${filteredData.length} matching results. Adjust filters to see all.`, 'warning');
+            } else if (filteredData.length < parsedData.length) {
+                // Only show status if we actually filtered something
+                if (selectedRegion !== 'ALL' || selectedStatus !== 'ALL' || minSkins > 0 || minLevel > 0) {
+                    alertBox(`Filters applied. Displaying ${filteredData.length} matches.`, 'success');
+                }
+            }
+        }
+        
+        // --- Core Rendering Functions ---
+
+        function updateTableDisplay() {
+            // Re-render table headers based on current columnSettings
+            const visibleColumns = columnSettings.filter(c => c.visible);
+
+            let headHTML = '<tr>';
+            headHTML += `<th scope="col" class="px-4 py-3">#</th>`; // Index column is mandatory
+            
+            visibleColumns.forEach(col => {
+                headHTML += `<th scope="col" class="px-4 py-3">${col.label}</th>`;
+            });
+
+            headHTML += `<th scope="col" class="px-4 py-3">ACTIONS</th>`; // Actions column is mandatory
+            headHTML += '</tr>';
+            resultsTableHead.innerHTML = headHTML;
+        }
+
+        function createTableRow(account, index) {
+            const tr = document.createElement('tr');
+            const statusText = account.account_status && account.account_status.includes("BAN") ? 'BANNED' : 'VALID';
+            const rowClass = statusText === 'VALID' ? 'row-valid' : 'row-banned'; 
+            tr.className = `${rowClass} border-b border-gray-700/50 transition-colors`;
+            
+            let rowHTML = `<td class="px-4 py-3 font-medium">${index}</td>`; // Index
+
+            const visibleColumns = columnSettings.filter(c => c.visible);
+
+            visibleColumns.forEach(col => {
+                rowHTML += `<td class="px-4 py-3">${getCellValue(account, col.key)}</td>`;
+            });
+
+            // Actions
+            const actionsHTML = `
+                <td class="px-4 py-3 flex space-x-1">
+                    <button onclick='showModal(${JSON.stringify(account).replace(/'/g, '&#39;')})' class="view-btn text-xs font-medium py-1 px-2 rounded-md transition-colors">
+                        View
+                    </button>
+                    <button onclick='copyAccountDetails(${JSON.stringify(account).replace(/'/g, '&#39;')})' class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-1 px-2 rounded-md transition-colors">
+                        Copy
+                    </button>
+                </td>
+            `;
+            // NOTE: Replaced single quotes in JSON string for safe attribute passing
+
+            tr.innerHTML = rowHTML + actionsHTML;
+            return tr;
+        }
+
+        function getCellValue(account, key) {
+            switch (key) {
+                case 'status':
+                    const statusText = account.account_status && account.account_status.includes("BAN") ? 'BANNED' : 'VALID';
+                    const statusClass = statusText === 'VALID' ? 'status-valid' : 'status-banned';
+                    const statusFull = account.account_status || 'N/A';
+                    return `<span title="${statusFull}" class="p-1 px-3 text-xs font-semibold uppercase tracking-wider rounded-full ${statusClass}">${statusText}</span>`;
+                case 'skins':
+                    // Use a span with accent color for visibility
+                    return `<span class="font-semibold accent-primary">${account.skin_count || 0}</span>`;
+                case 'level':
+                    return account.account_level !== 'N/A' ? account.account_level : 'N/A';
+                case 'region':
+                    return (account.region || 'N/A').toUpperCase();
+                case 'country':
+                    return (account.country || 'N/A').toUpperCase();
+                case 'email':
+                    const emailStatus = account.email_verified ? 'Verified' : 'Unverified';
+                    return `<span class="${account.email_verified ? 'text-green-400' : 'text-yellow-400'}">${emailStatus}</span>`;
+                case 'username':
+                    return account.username || 'N/A';
+                case 'password':
+                    return account.password || 'N/A';
+                case 'vp':
+                    return account.valorant_points || 0;
+                case 'rad':
+                    return account.radianite_points || 0;
+                case 'kc':
+                    return account.kingdom_credits || 0;
+                case 'last_activity':
+                    return account.last_activity || 'N/A';
+                case 'current_rank':
+                    return account.current_rank || 'N/A';
+                case 'peak_rank':
+                    return account.peak_rank || 'N/A';
+                default:
+                    return 'N/A';
+            }
+        }
+        
+        function normalizeRegion(rawRegion) {
+            const lowerRegion = (rawRegion || '').toLowerCase();
+            return REGION_MAP[lowerRegion] || 'AP'; 
+        }
+
+        // --- Utility Functions (Alert, Modal, Copy, Download) ---
+        
+        function alertBox(message, type) {
+            const alertDiv = document.createElement('div');
+            // Colors are hardcoded here for consistent alert branding regardless of theme
+            const bgColor = type === 'success' ? 'rgb(34 197 94)' : type === 'error' ? 'rgb(239 68 68)' : 'rgb(250 204 21)';
+            alertDiv.style.backgroundColor = bgColor;
+            alertDiv.className = `fixed bottom-4 right-4 p-4 rounded-lg shadow-xl text-white transition-opacity duration-300 z-50`;
+            alertDiv.innerHTML = message; 
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.classList.add('opacity-0');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 3000);
+        }
+        
+        function formatAccountData(data) {
+            const fieldsToDisplay = {
+                'skin_count': 'Skins',
+                'username': 'Username',
+                'password': 'Password',
+                'game_name': 'Game Name',
+                'tag_line': 'Tag Line',
+                'region': 'Region',
+                'country': 'Country',
+                'account_created_at': 'Account Created At',
+                'email_verified': 'Email Verified',
+                'account_verified': 'Account Verified',
+                'account_level': 'Account Level',
+                'account_status': 'Account Status',
+                'last_activity': 'Last Activity',
+                'current_rank': 'Current Rank',
+                'peak_rank': 'Peak Rank',
+                'previous_season_rank': 'Previous Season Rank',
+                'valorant_points': 'Valorant Points (VP)',
+                'radianite_points': 'Radianite Points (RAD)',
+                'kingdom_credits': 'Kingdom Credits (KC)',
+                'free_agents': 'Free Agents'
+            };
+
+            let formattedText = '';
+            const paddingLength = 25; 
+
+            for (const [jsonKey, displayKey] of Object.entries(fieldsToDisplay)) {
+                let value = data[jsonKey];
+                
+                if (value === undefined || value === null || value === '') {
+                    value = 'N/A';
+                } else if (typeof value === 'boolean') {
+                    value = value ? 'True' : 'False';
+                } else if (Array.isArray(value)) {
+                    if (jsonKey === 'skin_names') {
+                        value = `${value.length} items: ${value.slice(0, 3).join(', ')}${value.length > 3 ? ', ...' : ''}`;
+                    } else {
+                        value = value.join(', ');
+                    }
+                }
+                
+                formattedText += `${displayKey.padEnd(paddingLength)} : ${value}\n`;
+            }
+            return formattedText;
+        }
+
+        function closeViewModal() {
+            const modal = document.getElementById('view-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString || dateString === 'N/A') return 'N/A';
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString;
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                return `${day}-${month}-${year} | ${hours}:${minutes}:${seconds}`;
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function showModal(data) {
+            const modal = document.getElementById('view-modal');
+            
+            // Username and Game Name
+            const username = data.username || 'N/A';
+            const gameName = data.game_name || '';
+            const tagLine = data.tag_line || '';
+            const displayName = gameName && tagLine ? `${gameName} #${tagLine}` : username;
+            document.getElementById('dashboard-username').textContent = displayName;
+            
+            // Ban Banner
+            const banBanner = document.getElementById('ban-banner');
+            const isBanned = data.account_status && data.account_status.includes("BAN");
+            if (isBanned) {
+                banBanner.className = 'mt-3 bg-red-600 text-white font-bold py-2 px-4 rounded-lg uppercase';
+                banBanner.textContent = data.account_status || 'BANNED';
+                banBanner.classList.remove('hidden');
+            } else {
+                banBanner.classList.add('hidden');
+            }
+            
+            // Account Details
+            document.getElementById('dashboard-level').textContent = data.account_level || 'N/A';
+            document.getElementById('dashboard-region').textContent = (data.region || 'N/A').toUpperCase();
+            document.getElementById('dashboard-country').textContent = (data.country || 'N/A').toUpperCase();
+            document.getElementById('dashboard-created').textContent = formatDate(data.account_created_at);
+            document.getElementById('dashboard-last-checked').textContent = formatDate(new Date().toISOString());
+            
+            // Competitive Status
+            document.getElementById('dashboard-current-rank').textContent = data.current_rank || 'N/A';
+            document.getElementById('dashboard-peak-rank').textContent = data.peak_rank || 'N/A';
+            document.getElementById('dashboard-previous-rank').textContent = data.previous_season_rank || 'N/A';
+            document.getElementById('dashboard-last-activity').textContent = data.last_activity || 'No recent games';
+            
+            // Inventory & Currency
+            document.getElementById('dashboard-skin-count').textContent = data.skin_count || 0;
+            document.getElementById('dashboard-vp').textContent = data.valorant_points || 0;
+            document.getElementById('dashboard-rad').textContent = data.radianite_points || 0;
+            document.getElementById('dashboard-kc').textContent = data.kingdom_credits || 0;
+            document.getElementById('dashboard-free-agents').textContent = data.free_agents || 0;
+            
+            // Skin Collection
+            const skinSection = document.getElementById('skin-collection-section');
+            const skinGrid = document.getElementById('skin-grid');
+            const skinTotalCount = document.getElementById('skin-total-count');
+            
+            if (data.skin_names && Array.isArray(data.skin_names) && data.skin_names.length > 0) {
+                skinTotalCount.textContent = data.skin_names.length;
+                skinGrid.innerHTML = '';
+                
+                data.skin_names.forEach(skinName => {
+                    const skinButton = document.createElement('button');
+                    skinButton.className = 'skin-button text-sm font-medium py-2 px-3 rounded-md';
+                    skinButton.textContent = skinName;
+                    skinGrid.appendChild(skinButton);
+                });
+                
+                skinSection.classList.remove('hidden');
+            } else {
+                skinSection.classList.add('hidden');
+            }
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        
+        function copyAccountDetails(data) {
+            const formattedText = formatAccountData(data);
+            try {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = `--- Valorant Account Details ---\n${formattedText}--- End Details ---`;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alertBox("Account details copied to clipboard!", 'success');
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+                alertBox("Failed to copy details.", 'error');
+            }
+        }
+
+
+        // --- Action Button Handlers ---
+
+        async function clearResults() {
+            parsedData = [];
+            
+            document.getElementById('stat-eu').textContent = 0;
+            document.getElementById('stat-na').textContent = 0;
+            document.getElementById('stat-br').textContent = 0;
+            document.getElementById('stat-ap').textContent = 0;
+            
+            // Reset filters via their HTML elements if they exist, otherwise use a fallback
+            if(minSkinsInput) minSkinsInput.value = 0;
+            if(regionFilterSelect) regionFilterSelect.value = 'ALL';
+            if(statusFilterSelect) statusFilterSelect.value = 'ALL'; 
+            if(minLevelInput) minLevelInput.value = 0;         
+            
+            fileNameDisplay.textContent = '';
+            
+            await clearBackup();
+            
+            processData(); 
+            
+            alertBox("Results and **Automatic Backup** cleared.", 'success');
+        }
+
+        function copyTableData() {
+            const table = document.querySelector('table');
+            // Exclude the 'ACTIONS' column and the '#' column
+            const data = Array.from(table.rows).map(row => 
+                Array.from(row.cells)
+                     .slice(0, -1) // Exclude the last cell (ACTIONS)
+                     .map(cell => cell.innerText.trim())
+                     .join('\t')
+            ).join('\n');
+
+            try {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = data;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alertBox("Visible table data copied to clipboard!", 'success');
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+                alertBox("Failed to copy data.", 'error');
+            }
+        }
+
+        function downloadData() {
+            if (parsedData.length === 0) {
+                alertBox("No data loaded to download.", 'warning');
+                return;
+            }
+            
+            const dataToDownload = JSON.stringify(parsedData, null, 2);
+            const blob = new Blob([dataToDownload], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'valorant_accounts_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alertBox("Data download started.", 'success');
+        }
+
+    </script>
+</body>
+</html>c
